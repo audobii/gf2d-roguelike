@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
 
             //texture becomes null here for some reason?? - this doesnt work
-            gf2d_sprite_draw_image(test_surface, vector2d(0, 0));
+            gf2d_sprite_draw_image(test_surface, vector2d(350, 100));
 
             //UI elements last
             gf2d_sprite_draw(
