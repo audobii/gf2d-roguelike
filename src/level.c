@@ -119,7 +119,8 @@ void level_build(Level* level) {
     // if there is a default surface, free it
     if (level->tileLayer->surface)SDL_FreeSurface(level->tileLayer->surface);
     //create a surface the size we need it
-    level->tileLayer->surface = gf2d_graphics_create_surface(level->tileSize.x * level->mapSize.x, level->tileSize.y * level->mapSize.y);
+    //level->tileLayer->surface = gf2d_graphics_create_surface(level->tileSize.x * level->mapSize.x, level->tileSize.y * level->mapSize.y);
+    level->tileLayer->surface = SDL_CreateRGBSurface(0, level->tileSize.x * level->mapSize.x, level->tileSize.y * level->mapSize.y, 32, 0, 0, 0, 0);
     if (!level->tileLayer->surface)
     {
         slog("failed to create tileLayer surface");
@@ -154,11 +155,11 @@ void level_build(Level* level) {
         NULL,
         level->tileLayer->surface->pixels,
         level->tileLayer->surface->pitch);
-    /*
+    
     level->tileLayer->frame_w = level->tileLayer->surface->w;
     level->tileLayer->frame_h = level->tileLayer->surface->h;
     level->tileLayer->frames_per_line = 1;
-    */
+    
 }
 
 void level_draw(Level* level)
