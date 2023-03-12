@@ -18,6 +18,8 @@ int main(int argc, char * argv[])
     Color mouseColor = gfc_color8(255,255,255,180);
 
     Sprite* test_surface;
+    //these values make the surface transparent?
+    //SDL_Surface* surface = SDL_CreateRGBSurface(0, 1200, 700, 32, 0xff, 0xff00, 0xff0000, 0xff000000);
     SDL_Surface* surface = SDL_CreateRGBSurface(0, 1200, 700, 32, 0, 0, 0, 0);
     
     /*program initializtion*/
@@ -43,8 +45,8 @@ int main(int argc, char * argv[])
 
     //create another sprite - tileLayer
     test_surface = gf2d_sprite_new();
-    test_surface->frame_h = 500;
-    test_surface->frame_w = 500;
+    test_surface->frame_h = 512; //64 x 8
+    test_surface->frame_w = 768; //64 x 12
     test_surface->frames_per_line = 1;
     //make sure any default surface is freed
     if (test_surface->surface)SDL_FreeSurface(test_surface->surface);
@@ -78,8 +80,7 @@ int main(int argc, char * argv[])
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
 
-            //texture becomes null here for some reason?? - this doesnt work
-            gf2d_sprite_draw_image(test_surface, vector2d(350, 100));
+            gf2d_sprite_draw_image(test_surface, vector2d(1200/2 - test_surface->frame_w/2, 720/2 - test_surface->frame_h/2));
 
             //UI elements last
             gf2d_sprite_draw(
