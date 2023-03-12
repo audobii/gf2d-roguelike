@@ -4,22 +4,22 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
+#include "level.h"
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
-    Sprite* test_sprite;
     
     int mx,my;
     float mf = 0;
     Sprite *mouse;
     Color mouseColor = gfc_color8(255,255,255,180);
-
-    Sprite* test_surface;
-    SDL_Surface* surface = SDL_CreateRGBSurface(0, 1200, 700, 32, 0, 0, 0, 0);
     
+    Level* level;
+
     /*program initializtion*/
     init_logger("gf2d.log",0);
     slog("---==== BEGIN ====---");
@@ -39,29 +39,9 @@ int main(int argc, char * argv[])
     //game window is 1200x720
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
-    test_sprite = gf2d_sprite_load_all("images/wall1.png",64,64,1,true);
 
-    //create another sprite - tileLayer
-    test_surface = gf2d_sprite_new();
-    test_surface->frame_h = 500;
-    test_surface->frame_w = 500;
-    test_surface->frames_per_line = 1;
-    //make sure any default surface is freed
-    if (test_surface->surface)SDL_FreeSurface(test_surface->surface);
-    //put new surface
-    test_surface->surface = surface;
-    test_surface->surface = gf2d_graphics_screen_convert(&test_surface->surface);
-
-    //draw tiles 
-    gf2d_sprite_draw_to_surface(test_sprite, vector2d(0, 0), NULL, NULL, 0, test_surface->surface);
-
-    //convert to texture
-    test_surface->texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), test_surface->surface);
-    SDL_SetTextureBlendMode(test_surface->texture, SDL_BLENDMODE_BLEND);
-    SDL_UpdateTexture(test_surface->texture,
-        NULL,
-        test_surface->surface->pixels,
-        test_surface->surface->pitch);
+    level = level_load("rooms/startRoom.json");
+    level_set_active_level(level);
 
     /*main game loop*/
     while(!done)
@@ -77,9 +57,7 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
-
-            //texture becomes null here for some reason?? - this doesnt work
-            gf2d_sprite_draw_image(test_surface, vector2d(350, 100));
+            level_draw(level_get_active_level());
 
             //UI elements last
             gf2d_sprite_draw(
@@ -99,6 +77,7 @@ int main(int argc, char * argv[])
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
+    level_free(level);
     slog("---==== END ====---");
     return 0;
 }
