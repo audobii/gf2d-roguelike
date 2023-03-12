@@ -57,11 +57,18 @@ Level* level_load(const char* filename) {
 
     sj_value_as_vector2d(sj_object_get_value(lj, "tileSize"), &level->tileSize);
     sj_object_get_value_as_int(lj, "tileFPL", &tileFPL);
+    //load in first tileSet
     str = sj_object_get_value_as_string(lj, "tileSet");
-
     if (str)
     {
         level->tileSet = gf2d_sprite_load_all(str, (Sint32)level->tileSize.x, (Sint32)level->tileSize.y, tileFPL, 1);
+    }
+
+    //load in alt tileSet; dont load in if there isnt one
+    str = sj_object_get_value_as_string(lj, "tileSetAlt");
+    if (str)
+    {
+        level->tileSetAlt = gf2d_sprite_load_all(str, (Sint32)level->tileSize.x, (Sint32)level->tileSize.y, tileFPL, 1);
     }
 
     list = sj_object_get_value(lj, "tileMap");
@@ -139,13 +146,38 @@ void level_build(Level* level) {
         for (i = 0; i < level->mapSize.x; i++)// i is column
         {
             if (level->tileMap[(j * (int)level->mapSize.x) + i] <= 0)continue;//skip zero
+
+            //doing a check here for if == 1 or == 2 doesnt work
+            //it will only load in the sprite if == 1, but never if ==2???
+            /*
+            if (level->tileMap[(j * (int)level->mapSize.x) + i] == 1) {
+                gf2d_sprite_draw_to_surface(
+                    level->tileSet,
+                    vector2d(i * level->tileSize.x, j * level->tileSize.y),
+                    NULL,
+                    NULL,
+                    level->tileMap[(j * (int)level->mapSize.x) + i] - 1,
+                    level->tileLayer->surface);
+            }
+            if (level->tileMap[(j * (int)level->mapSize.x) + i] == 2) {
+                gf2d_sprite_draw_to_surface(
+                    level->tileSetAlt,
+                    vector2d(i * level->tileSize.x, j * level->tileSize.y),
+                    NULL,
+                    NULL,
+                    level->tileMap[(j * (int)level->mapSize.x) + i] - 1,
+                    level->tileLayer->surface);
+            }
+            */
+            
             gf2d_sprite_draw_to_surface(
-                level->tileSet,
+                level->tileSetAlt,
                 vector2d(i * level->tileSize.x, j * level->tileSize.y),
                 NULL,
                 NULL,
                 level->tileMap[(j * (int)level->mapSize.x) + i] - 1,
                 level->tileLayer->surface);
+            
         }
     }
     //convert it to a texture
@@ -179,6 +211,7 @@ Level* level_new() {
 void level_free(Level* level) {
 	if (!level)return;
 	if (level->tileSet)gf2d_sprite_free(level->tileSet);
+    if (level->tileSetAlt)gf2d_sprite_free(level->tileSetAlt);
 	if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
 	if (level->tileMap)free(level->tileMap);
 	gfc_list_foreach(level->clips, free);

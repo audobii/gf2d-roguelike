@@ -17,6 +17,7 @@ typedef struct
 {
     TextLine    name;
     Sprite* tileSet;
+    Sprite* tileSetAlt;
     Vector2D    tileSize;    //the width and height of the individual tile?
     Vector2D    mapSize;    //the width and height of the tile map
     int* tileMap;    
