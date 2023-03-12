@@ -9,6 +9,7 @@ typedef struct
     SJson* entity_def;
 }EntityManager;
 
+//similar in quake with the list of entities
 static EntityManager entity_manager = { 0 };
 
 void entity_manager_close()
@@ -72,7 +73,11 @@ void entity_free(Entity* ent)
 void entity_draw(Entity* ent)
 {
     if (!ent)return;
-    if (ent->sprite)
+
+    if (ent->draw) { //if a defined draw function exists for the ent (like player)
+        ent->draw(ent);
+    }
+    else if (ent->sprite)
     {
         gf2d_sprite_draw(
             ent->sprite,
@@ -83,9 +88,11 @@ void entity_draw(Entity* ent)
             NULL,
             NULL,
             (Uint32)ent->frame);
+
+
+        gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
+        gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
     }
-    gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
-    gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
 }
 
 void entity_draw_all()

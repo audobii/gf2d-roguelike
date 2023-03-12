@@ -4,9 +4,12 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
+#include "gfc_input.h"
+
 #include "level.h"
 #include "entity.h"
 #include "slime.h"
+#include "player.h"
 
 int main(int argc, char * argv[])
 {
@@ -38,6 +41,8 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
     entity_manager_init(1024);
     SDL_ShowCursor(SDL_DISABLE);
+
+    gfc_input_init("config/input.json");
     
     /*demo setup*/
     //game window is 1200x720
@@ -48,6 +53,8 @@ int main(int argc, char * argv[])
     level = level_load("rooms/startRoom.json");
     level_set_active_level(level);
 
+    player_new(vector2d(500, 500));
+
     /*main game loop*/
     while(!done)
     {
@@ -57,6 +64,8 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
+
+        gfc_input_update();
 
         entity_think_all();
         entity_update_all();
@@ -87,7 +96,7 @@ int main(int argc, char * argv[])
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
-    entity_free(ent);
+    entity_free_all();
     level_free(level);
     slog("---==== END ====---");
     return 0;

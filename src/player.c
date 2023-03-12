@@ -1,0 +1,120 @@
+#include "simple_logger.h"
+
+#include "gfc_input.h"
+
+#include "gf2d_draw.h"
+
+#include "level.h"
+#include "player.h"
+
+void player_think(Entity* self);
+void player_draw(Entity* self);
+void player_free(Entity* self);
+
+static Entity* ThePlayer = NULL;
+
+typedef struct {
+	Uint32 health;
+	Uint32 mana;
+}PlayerData;
+
+Entity* player_get() {
+    return ThePlayer;
+}
+
+Entity* player_new(Vector2D position) {
+	PlayerData* data;
+	Entity* ent;
+
+	ent = entity_new();
+	if (!ent)return NULL;
+
+	gfc_line_cpy(ent->name, "player");
+
+	ent->sprite = gf2d_sprite_load_image("images/player_temp.png");
+    ent->drawOffset = vector2d(28, 32);
+
+	ent->think = player_think;
+	ent->draw = player_draw;
+	ent->free_entity = player_free;
+
+	vector2d_copy(ent->position, position);
+	ent->speed = 2.5;
+
+	data = gfc_allocate_array(sizeof(PlayerData), 1);
+	if (data) {
+		data->health = 100;
+		data->mana = 100;
+		ent->data = data;
+	}
+
+	ThePlayer = ent;
+	return ent;
+}
+
+void player_think(Entity* self) {
+    int mx, my;
+    float axis = 0;
+    Vector2D dir;
+    Vector2D m = { 0 };
+    Vector2D walk = { 0 };
+    if (!self)return;
+
+    SDL_GetMouseState(&mx, &my);
+    m.x = mx;
+    m.y = my;
+    vector2d_sub(dir, m, self->position);
+
+    if (gfc_input_command_down("walkup"))
+    {
+        slog("go up");
+        walk.y = -1;
+    }
+    if (gfc_input_command_down("walkdown"))
+    {
+        walk.y += 1;
+    }
+    if (gfc_input_command_down("walkleft"))
+    {
+        walk.x = -1;
+    }
+    if (gfc_input_command_down("walkright"))
+    {
+        walk.x += 1;
+    }
+
+    if ((walk.x) || (walk.y))
+    {
+        vector2d_normalize(&walk);
+        vector2d_scale(walk, walk, self->speed);
+        vector2d_copy(self->velocity, walk);
+    }
+    else
+    {
+        vector2d_clear(self->velocity);
+    }
+}
+
+void player_draw(Entity* self) {
+    if (!self)return;
+    //this is temp, its just cuz player sprite is a still image
+    gf2d_sprite_draw(
+        self->sprite,
+        self->position,
+        NULL,
+        &self->drawOffset,
+        &self->rotation,
+        NULL,
+        NULL,
+        0);
+
+    //draw body for collisions at this pos? idk
+    gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
+    gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
+}
+
+void player_free(Entity* self)
+{
+	if (!self)return;
+	ThePlayer = NULL;
+}

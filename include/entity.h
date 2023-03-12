@@ -27,6 +27,7 @@ typedef struct Entity_S
     void* data;
 
     Bool rotatable;
+    TextLine name;
 }Entity;
 
 /**
