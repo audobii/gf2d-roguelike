@@ -93,6 +93,8 @@ void entity_draw(Entity* ent)
         gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
         gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
     }
+
+    body_draw(&ent->body, vector2d(0, 0));
 }
 
 void entity_draw_all()
@@ -124,6 +126,8 @@ void entity_update(Entity* ent)
         }
         //        angle_clamp_radians(&ent->rotation);
     }
+
+    vector2d_add(ent->body.position, ent->body.position, ent->body.velocity);
 }
 
 void entity_update_all()

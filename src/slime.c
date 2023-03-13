@@ -43,11 +43,13 @@ void slime_think(Entity* self)
     {
         vector2d_set_magnitude(&dir, self->speed);
         vector2d_copy(self->velocity, dir);
-        vector2d_copy(self->body.position, self->position);
+        //vector2d_copy(self->body.position, self->position);
+        vector2d_copy(self->body.velocity, dir);
     }
     else
     {
         vector2d_clear(self->velocity);
+        vector2d_clear(self->body.velocity);
     }
 }
 

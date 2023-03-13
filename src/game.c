@@ -102,7 +102,7 @@ int main(int argc, char * argv[])
             //body_draw(&player_get()->body, vector2d(0, 0));
             //body_draw(&ent->body, vector2d(0, 0));
             
-            level_draw_active_entities_bodies(level);
+            //level_draw_active_entities_bodies(level);
             level_draw_static_shapes(level);
 
             //UI elements last

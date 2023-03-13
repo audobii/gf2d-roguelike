@@ -79,6 +79,7 @@ Collision* gf2d_collision_body_shape(Shape s, Body* b) {
 }
 
 void gf2d_collision_update(List* list) {
+    Body* b;
 
     int i, count;
     Collision* collision;
@@ -88,7 +89,12 @@ void gf2d_collision_update(List* list) {
     {
         collision = (Collision*)gfc_list_get_nth(list, i);
         if (!collision)continue;
-        slog("oof! a collision happened");
+
+        //TODO: math here about messing w position/velocity of body??
+        b = collision->body;
+        vector2d_sub(b->position, b->position, b->velocity);
+
+        //slog("oof! a collision happened");
     }
 
     gf2d_collision_list_clear(list);
