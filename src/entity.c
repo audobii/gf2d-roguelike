@@ -127,7 +127,10 @@ void entity_update(Entity* ent)
         //        angle_clamp_radians(&ent->rotation);
     }
 
+    //update body stuff as well
     vector2d_add(ent->body.position, ent->body.position, ent->body.velocity);
+    //maybe a hacky way to make sure sprite is also doing the collision stuff
+    ent->position = ent->body.position;
 }
 
 void entity_update_all()
