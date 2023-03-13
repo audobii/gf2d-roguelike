@@ -25,4 +25,42 @@ typedef struct Collision_S
  */
 Collision* collision_new();
 
+/**
+ * @brief empty the list, without freeing the data
+ * @param list the collision list to clear
+ */
+void gf2d_collision_list_clear(List* list);
+
+/**
+ * @brief free data allocated for a collision
+ * @param collision the collision to free
+ */
+void gf2d_collision_free(Collision* collision);
+
+/**
+ * @brief free all the collisions and the list containing it.
+ * @param list must contain a list of collisions
+ */
+void gf2d_collision_list_free(List* list);
+
+/**
+ * @brief check if there is overlap (collision) between body/active entity and static shape
+ * @return NULL if no collision, new Collision otherwise
+ */
+Collision* gf2d_collision_body_shape(Shape s, Body* b);
+
+/**
+ * @brief build list of collisions based on static shapes and active bodies list
+ * @param collisions the list of collisions to add to
+ * @param staticShapes the list of static shapes to check against
+ * @param activeBodies the list of active entities's bodies
+ */
+List* gf2d_collision_build_list(List* collisions, List* staticShapes, List* activeBodies);
+
+/**
+ * @brief do something to each collision and then remove the collision from the list
+ * @param list must contain a list of collisions
+ */
+void gf2d_collision_update(List* list);
+
 #endif

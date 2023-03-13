@@ -12,6 +12,7 @@
 #include "entity.h"
 #include "slime.h"
 #include "player.h"
+#include "gf2d_collision.h"
 
 int main(int argc, char * argv[])
 {
@@ -62,6 +63,15 @@ int main(int argc, char * argv[])
     level->activeEntities = gfc_list_append(level->activeEntities, player_get());
     level->activeEntities = gfc_list_append(level->activeEntities, ent);
 
+    List* collisions = gfc_list_new();
+    List* activeBodies = gfc_list_new();
+
+    Entity* tempent;
+    for (int i = 0; i < level->activeEntities->count; i++) {
+        tempent = gfc_list_get_nth(level->activeEntities, i);
+        activeBodies = gfc_list_append(activeBodies, &tempent->body);
+    }
+
     /*main game loop*/
     while(!done)
     {
@@ -76,6 +86,8 @@ int main(int argc, char * argv[])
 
         entity_think_all();
         entity_update_all();
+
+        gf2d_collision_build_list(collisions, level->staticShapes, activeBodies);
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
@@ -106,6 +118,7 @@ int main(int argc, char * argv[])
                 //(int)mf
                 );
 
+            gf2d_collision_update(collisions);
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
