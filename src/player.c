@@ -14,7 +14,6 @@ void player_free(Entity* self);
 static Entity* ThePlayer = NULL;
 
 typedef struct {
-	Uint32 health;
 	Uint32 mana;
 }PlayerData;
 
@@ -38,15 +37,21 @@ Entity* player_new(Vector2D position) {
 	ent->draw = player_draw;
 	ent->free_entity = player_free;
 
+    ent->health = 100;
+
 	vector2d_copy(ent->position, position);
 	ent->speed = 2.5;
 
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
-		data->health = 100;
 		data->mana = 100;
 		ent->data = data;
 	}
+
+    ent->shape = gfc_shape_circle(0,0, 22);
+    ent->body.shape = &ent->shape;
+    ent->body.team = 1;
+    vector2d_copy(ent->body.position, position);
 
 	ThePlayer = ent;
 	return ent;
@@ -67,7 +72,6 @@ void player_think(Entity* self) {
 
     if (gfc_input_command_down("walkup"))
     {
-        slog("go up");
         walk.y = -1;
     }
     if (gfc_input_command_down("walkdown"))
@@ -88,6 +92,7 @@ void player_think(Entity* self) {
         vector2d_normalize(&walk);
         vector2d_scale(walk, walk, self->speed);
         vector2d_copy(self->velocity, walk);
+        vector2d_copy(self->body.position,self->position);
     }
     else
     {

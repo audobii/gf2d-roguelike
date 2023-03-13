@@ -160,5 +160,24 @@ SJson* entity_get_def_by_name(const char* name)
     return NULL;
 }
 
+Shape entity_get_shape_after_move(Entity* ent)
+{
+    Shape shape = { 0 };
+    if (!ent)return shape;
+    gfc_shape_copy(&shape, ent->shape);
+    gfc_shape_move(&shape, ent->position);
+    gfc_shape_move(&shape, ent->velocity);
+    return shape;
+}
+
+Shape entity_get_shape(Entity* ent)
+{
+    Shape shape = { 0 };
+    if (!ent)return shape;
+    gfc_shape_copy(&shape, ent->shape);
+    gfc_shape_move(&shape, ent->position);
+    return shape;
+}
+
 
 /*eol@eof*/

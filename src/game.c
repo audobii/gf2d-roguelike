@@ -3,7 +3,9 @@
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
+#include "gf2d_draw.h"
 
+#include "gfc_shape.h"
 #include "gfc_input.h"
 
 #include "level.h"
@@ -25,6 +27,8 @@ int main(int argc, char * argv[])
     Color mouseColor = gfc_color8(255,255,255,180);
     
     Level* level;
+
+    //Shape test_shape = gfc_shape_rect(100, 100, 100, 10);
 
     /*program initializtion*/
     init_logger("gf2d.log",0);
@@ -48,7 +52,7 @@ int main(int argc, char * argv[])
     //game window is 1200x720
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
-    ent = slime_new(vector2d(100,100));
+    ent = slime_new(vector2d(350,250));
 
     level = level_load("rooms/startRoom.json");
     level_set_active_level(level);
@@ -76,7 +80,12 @@ int main(int argc, char * argv[])
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
             level_draw(level_get_active_level());
 
+            //gf2d_draw_shape(test_shape, GFC_COLOR_RED, vector2d(0, 0));
+
             entity_draw_all();
+
+            body_draw(&player_get()->body, vector2d(0, 0));
+            level_draw_static_shapes(level);
 
             //UI elements last
             gf2d_sprite_draw(

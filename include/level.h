@@ -22,7 +22,7 @@ typedef struct
     Vector2D    mapSize;    //the width and height of the tile map
     int* tileMap;    
     Sprite* tileLayer;  
-    List* clips;      //list of static shapes to clip against in the game world
+    List* staticShapes;      //list of static shapes to clip against in the game world
 }Level;
 
 /**
@@ -68,5 +68,15 @@ Level* level_new();
  * @brief clean up a previously allocated level
  */
 void level_free(Level* level);
+
+/**
+ * @brief make static shapes list for level 
+ */
+void level_build_static_collision_layer(Level* level);
+
+/**
+ * @brief draw static shapes list for level
+ */
+void level_draw_static_shapes(Level* level);
 
 #endif

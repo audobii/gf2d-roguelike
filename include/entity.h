@@ -3,8 +3,11 @@
 
 #include "gfc_types.h"
 #include "gfc_vector.h"
+#include "gfc_shape.h"
 
 #include "gf2d_sprite.h"
+
+#include "body.h"
 
 typedef struct Entity_S
 {
@@ -15,6 +18,8 @@ typedef struct Entity_S
     float   speed;
     Vector2D drawOffset;
 
+    Shape shape;
+    Body body;
 
     Vector2D position;
     Vector2D velocity;
@@ -28,6 +33,8 @@ typedef struct Entity_S
 
     Bool rotatable;
     TextLine name;
+
+    Uint32 health;
 }Entity;
 
 /**
@@ -68,6 +75,20 @@ void entity_update_all();
  * @brief call all the think functions for the entities, if they have one
  */
 void entity_think_all();
+
+/**
+ * @brief given an entity get its shape in world space
+ * @param ent the entity to check
+ * @return a shape where its position is set to the world position
+ */
+Shape entity_get_shape(Entity* ent);
+
+/**
+ * @brief given an entity get its shape in world space where it will be after it moves
+ * @param ent the entity to check
+ * @return a shape where its position + velocity is set to the world position
+ */
+Shape entity_get_shape_after_move(Entity* ent);
 
 
 #endif
