@@ -27,5 +27,24 @@ void body_draw(Body* body, Vector2D offset)
 
 void body_update(Body* body) {
     if (!body)return;
+    //TODO
 
+}
+
+Shape body_to_shape(Body* a)
+{
+    Shape aS = { 0 };
+    if (!a)return aS;
+    gfc_shape_copy(&aS, *a->shape);
+    gfc_shape_move(&aS, a->position);
+    return aS;
+}
+
+Uint8 body_body_collide(Body* a, Body* b) {
+    if ((!a) || (!b))
+    {
+        slog("missing body in collision check");
+        return 0;
+    }
+    return gfc_shape_overlap(body_to_shape(a), body_to_shape(b));
 }

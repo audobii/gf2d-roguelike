@@ -28,5 +28,20 @@ void body_draw(Body* body, Vector2D offset);
 
 void body_update(Body* body);
 
+/**
+ * @brief check if the two bodies provided are overlapping in any way
+ * @param a one body
+ * @param b the other body
+ * @return 0 on error or no collision, 1 otherwise
+ */
+Uint8 body_body_collide(Body* a, Body* b);
+
+/**
+ * @brief get the shape, adjusted for position for the provided body
+ * @param a the body to get the shape for
+ * @return an empty {0} shape on error, or the body shape information otherwise
+ */
+Shape body_to_shape(Body* a);
+
 
 #endif

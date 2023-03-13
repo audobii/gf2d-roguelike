@@ -23,6 +23,7 @@ typedef struct
     int* tileMap;    
     Sprite* tileLayer;  
     List* staticShapes;      //list of static shapes to clip against in the game world
+    List* activeEntities;
 }Level;
 
 /**
@@ -78,5 +79,11 @@ void level_build_static_collision_layer(Level* level);
  * @brief draw static shapes list for level
  */
 void level_draw_static_shapes(Level* level);
+
+/**
+ * @brief draw the shapes for each active entity's body (should be magenta circle)
+ */
+void level_draw_active_entities_bodies(Level* level);
+
 
 #endif

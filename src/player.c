@@ -92,6 +92,7 @@ void player_think(Entity* self) {
         vector2d_normalize(&walk);
         vector2d_scale(walk, walk, self->speed);
         vector2d_copy(self->velocity, walk);
+        //might be a hacky way to do bodies
         vector2d_copy(self->body.position,self->position);
     }
     else

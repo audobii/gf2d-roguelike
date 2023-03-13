@@ -7,6 +7,8 @@
 #include "gf2d_graphics.h"
 
 #include "level.h"
+#include "entity.h"
+#include "body.h"
 
 void level_build(Level* level);
 
@@ -230,6 +232,15 @@ void level_draw_static_shapes(Level* level) {
     }
 }
 
+void level_draw_active_entities_bodies(Level* level) {
+    Entity* ent;
+
+    for (int i = 0; i < level->activeEntities->count; i++) {
+        ent = gfc_list_get_nth(level->activeEntities, i);
+        body_draw(&ent->body, vector2d(0, 0));
+    }
+}
+
 void level_draw(Level* level)
 {
     if (!level)return;
@@ -252,6 +263,8 @@ void level_free(Level* level) {
 	if (level->tileMap)free(level->tileMap);
 	gfc_list_foreach(level->staticShapes, free);
 	gfc_list_delete(level->staticShapes);
+    //gfc_list_foreach(level->activeEntities, free);
+    gfc_list_delete(level->activeEntities);
 	free(level);
 }
 

@@ -59,6 +59,9 @@ int main(int argc, char * argv[])
 
     player_new(vector2d(500, 500));
 
+    level->activeEntities = gfc_list_append(level->activeEntities, player_get());
+    level->activeEntities = gfc_list_append(level->activeEntities, ent);
+
     /*main game loop*/
     while(!done)
     {
@@ -84,7 +87,10 @@ int main(int argc, char * argv[])
 
             entity_draw_all();
 
-            body_draw(&player_get()->body, vector2d(0, 0));
+            //body_draw(&player_get()->body, vector2d(0, 0));
+            //body_draw(&ent->body, vector2d(0, 0));
+            
+            level_draw_active_entities_bodies(level);
             level_draw_static_shapes(level);
 
             //UI elements last

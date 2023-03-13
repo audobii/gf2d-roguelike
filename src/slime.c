@@ -21,6 +21,12 @@ Entity* slime_new(Vector2D position)
     ent->speed = 1.3;
     ent->rotation = 0;
     ent->rotatable = false;
+
+    //body/collision stuff
+    ent->shape = gfc_shape_circle(0, 0, 12);
+    ent->body.shape = &ent->shape;
+    ent->body.team = 1;
+    vector2d_copy(ent->body.position, position);
     return ent;
 }
 
@@ -37,6 +43,7 @@ void slime_think(Entity* self)
     {
         vector2d_set_magnitude(&dir, self->speed);
         vector2d_copy(self->velocity, dir);
+        vector2d_copy(self->body.position, self->position);
     }
     else
     {
