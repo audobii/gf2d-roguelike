@@ -1,6 +1,8 @@
 #include "simple_logger.h"
 #include "slime.h"
 
+#include "player.h"
+
 void slime_think(Entity* self);
 
 
@@ -36,11 +38,13 @@ void slime_think(Entity* self)
 {
     Vector2D m, dir;
     int mx, my;
+    Vector2D player_pos = player_get_position();
+
     if (!self)return;
     SDL_GetMouseState(&mx, &my);
     m.x = mx;
     m.y = my;
-    vector2d_sub(dir, m, self->position);
+    vector2d_sub(dir, player_pos, self->position);
     if (vector2d_magnitude_compare(dir, 10) > 0)
     {
         vector2d_set_magnitude(&dir, self->speed);

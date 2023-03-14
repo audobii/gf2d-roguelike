@@ -16,7 +16,7 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
     if (!ent)return NULL;
 
     ent->think = projectile_think;
-    ent->update = projectile_update;
+    //ent->update = projectile_update;
     ent->draw = projectile_draw;
 
     ent->shape = gfc_shape_circle(0, 0, 5);// shape position becomes offset from entity position, in this case zero

@@ -24,6 +24,11 @@ Entity* player_get() {
     return ThePlayer;
 }
 
+Vector2D player_get_position() {
+    if (ThePlayer == NULL)return;
+    return ThePlayer->position;
+}
+
 Entity* player_new(Vector2D position) {
 	PlayerData* data;
 	Entity* ent;
@@ -61,14 +66,21 @@ Entity* player_new(Vector2D position) {
 }
 
 void player_attack(Entity* self) {
-    slog("atk");
-    Vector2D dir;
+    //slog("atk");
+    Vector2D m, dir;
+    int mx, my;
 
     PlayerData* data;
     if ((!self) || (!self->data))return;
     data = self->data;
 
-    dir = vector2d_from_angle(self->rotation);
+    SDL_GetMouseState(&mx, &my);
+    m.x = mx;
+    m.y = my;
+    vector2d_sub(dir, m, self->position);
+
+    //dir = vector2d_from_angle(self->rotation);
+    
     projectile_new(self, self->body.position, dir, 5, 5);
     
 }
