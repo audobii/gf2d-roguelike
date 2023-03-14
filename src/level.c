@@ -241,6 +241,10 @@ void level_draw_active_entities_bodies(Level* level) {
     }
 }
 
+void level_add_entity(Level* level, Entity* entity) {
+    level->activeEntities = gfc_list_append(level->activeEntities, entity);
+}
+
 void level_draw(Level* level)
 {
     if (!level)return;

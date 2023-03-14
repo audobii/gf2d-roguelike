@@ -3,15 +3,18 @@
 #include "gfc_input.h"
 
 #include "gf2d_draw.h"
+#include "gf2d_mouse.h"
 
 #include "level.h"
 #include "player.h"
+#include "projectile.h"
 
 void player_think(Entity* self);
 void player_draw(Entity* self);
 void player_free(Entity* self);
 
 static Entity* ThePlayer = NULL;
+static float internal_timer = 0;
 
 typedef struct {
 	Uint32 mana;
@@ -55,6 +58,19 @@ Entity* player_new(Vector2D position) {
 
 	ThePlayer = ent;
 	return ent;
+}
+
+void player_attack(Entity* self) {
+    slog("atk");
+    Vector2D dir;
+
+    PlayerData* data;
+    if ((!self) || (!self->data))return;
+    data = self->data;
+
+    dir = vector2d_from_angle(self->rotation);
+    projectile_new(self, self->body.position, dir, 5, 5);
+    
 }
 
 void player_think(Entity* self) {
@@ -101,6 +117,15 @@ void player_think(Entity* self) {
         vector2d_clear(self->velocity);
         vector2d_clear(self->body.velocity);
     }
+
+    //internal timer is a temporary fix to input_key_pressed not working...
+    internal_timer += 0.1;
+    
+    if (gfc_input_command_down("attack") && internal_timer > 5.0) {
+        player_attack(self);
+        internal_timer = 0;
+    }
+
 }
 
 void player_draw(Entity* self) {

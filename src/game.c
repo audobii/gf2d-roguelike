@@ -14,6 +14,8 @@
 #include "player.h"
 #include "gf2d_collision.h"
 
+#include "gf2d_mouse.h"
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -114,8 +116,7 @@ int main(int argc, char * argv[])
                 NULL,
                 NULL,
                 &mouseColor,
-                0
-                //(int)mf
+                0 //(int)mf
                 );
 
             gf2d_collision_update(collisions);

@@ -27,6 +27,8 @@ Entity* slime_new(Vector2D position)
     ent->body.shape = &ent->shape;
     ent->body.team = 1;
     vector2d_copy(ent->body.position, position);
+
+    ent->health = 25;
     return ent;
 }
 

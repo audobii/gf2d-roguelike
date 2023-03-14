@@ -6,6 +6,7 @@
 #include "gfc_list.h"
 
 #include "gf2d_sprite.h"
+#include "entity.h"
 
 typedef struct
 {
@@ -84,6 +85,12 @@ void level_draw_static_shapes(Level* level);
  * @brief draw the shapes for each active entity's body (should be magenta circle)
  */
 void level_draw_active_entities_bodies(Level* level);
+
+/**
+ * @brief add an entity to the list of active entities of the level
+ * @param entity the entity to add
+ */
+void level_add_entity(Level* level, Entity* entity);
 
 
 #endif

@@ -47,7 +47,7 @@
         },
         {
             "command":"attack",
-            "keys":["."]
+            "keys":[" "]
         },
         {
             "command":"activate",

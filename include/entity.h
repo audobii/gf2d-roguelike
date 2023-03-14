@@ -35,6 +35,7 @@ typedef struct Entity_S
     TextLine name;
 
     Uint32 health;
+    float damage;
 }Entity;
 
 /**
