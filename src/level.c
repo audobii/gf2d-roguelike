@@ -243,6 +243,11 @@ void level_draw_active_entities_bodies(Level* level) {
 
 void level_add_entity(Level* level, Entity* entity) {
     level->activeEntities = gfc_list_append(level->activeEntities, entity);
+    level->activeBodies = gfc_list_append(level->activeBodies, &entity->body);
+}
+
+List* level_get_active_bodies(Level* level) {
+    return level->activeEntities;
 }
 
 void level_draw(Level* level)
@@ -256,6 +261,8 @@ Level* level_new() {
 	Level* level;
 	level = gfc_allocate_array(sizeof(Level), 1);
 	level->staticShapes = gfc_list_new();
+    level->activeEntities = gfc_list_new();
+    level->activeBodies = gfc_list_new();
 	return level;
 }
 
@@ -267,6 +274,8 @@ void level_free(Level* level) {
 	if (level->tileMap)free(level->tileMap);
 	gfc_list_foreach(level->staticShapes, free);
 	gfc_list_delete(level->staticShapes);
+    //gfc_list_foreach(level->activeBodies, free);
+    gfc_list_delete(level->activeBodies);
     //gfc_list_foreach(level->activeEntities, free);
     gfc_list_delete(level->activeEntities);
 	free(level);

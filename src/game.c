@@ -62,17 +62,10 @@ int main(int argc, char * argv[])
 
     player_new(vector2d(500, 500));
 
-    level->activeEntities = gfc_list_append(level->activeEntities, player_get());
-    level->activeEntities = gfc_list_append(level->activeEntities, ent);
+    level_add_entity(level, player_get());
+    level_add_entity(level, ent);
 
     List* collisions = gfc_list_new();
-    List* activeBodies = gfc_list_new();
-
-    Entity* tempent;
-    for (int i = 0; i < level->activeEntities->count; i++) {
-        tempent = gfc_list_get_nth(level->activeEntities, i);
-        activeBodies = gfc_list_append(activeBodies, &tempent->body);
-    }
 
     /*main game loop*/
     while(!done)
@@ -89,7 +82,7 @@ int main(int argc, char * argv[])
         entity_think_all();
         entity_update_all();
 
-        gf2d_collision_build_list(collisions, level->staticShapes, activeBodies);
+        gf2d_collision_build_list(collisions, level->staticShapes, level->activeBodies);
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame

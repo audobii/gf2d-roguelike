@@ -31,6 +31,8 @@ Entity* slime_new(Vector2D position)
     vector2d_copy(ent->body.position, position);
 
     ent->health = 25;
+
+    gfc_line_cpy(ent->name, "slime");
     return ent;
 }
 

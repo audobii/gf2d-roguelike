@@ -25,6 +25,7 @@ typedef struct
     Sprite* tileLayer;  
     List* staticShapes;      //list of static shapes to clip against in the game world
     List* activeEntities;
+    List* activeBodies;
 }Level;
 
 /**
@@ -92,5 +93,11 @@ void level_draw_active_entities_bodies(Level* level);
  */
 void level_add_entity(Level* level, Entity* entity);
 
+/**
+ * @brief get list of current level's active bodies (derived from active entities)
+ * @param level the level to get list from
+ * @return list of active bodies for given level
+ */
+List* level_get_active_bodies(Level* level);
 
 #endif

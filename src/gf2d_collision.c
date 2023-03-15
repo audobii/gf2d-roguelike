@@ -4,6 +4,8 @@
 #include "gf2d_draw.h"
 #include "gf2d_collision.h"
 
+#include "level.h"
+
 Collision* collision_new() {
     Collision* collision = NULL;
     collision = (Collision*)malloc(sizeof(Collision));
@@ -93,6 +95,12 @@ void gf2d_collision_update(List* list) {
         //TODO: math here about messing w position/velocity of body??
         b = collision->body;
         vector2d_sub(b->position, b->position, b->velocity);
+
+        //check if projectile hitting wall - delete body if so
+        if (!gfc_line_cmp(b->name, "proj")) {
+            gfc_list_delete_data(level_get_active_level()->activeBodies, b);
+            gfc_line_cpy(b->name, "FREEME");
+        }
 
         //slog("oof! a collision happened");
     }

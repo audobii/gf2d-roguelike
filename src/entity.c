@@ -2,6 +2,8 @@
 #include "gf2d_draw.h"
 #include "entity.h"
 
+#include "level.h"
+
 typedef struct
 {
     Uint32  entity_max;
@@ -109,28 +111,39 @@ void entity_draw_all()
 
 void entity_update(Entity* ent)
 {
-    if (!ent)return;
-    if (ent->update)
-    {
-        if (ent->update(ent))return;// if the update function returns 1, do not do generic update
-    }
-    ent->frame += 0.1;
-    if (ent->frame >= 16)ent->frame = 0;
-    vector2d_add(ent->position, ent->position, ent->velocity);
-    if (vector2d_magnitude_compare(ent->velocity, 0) != 0)
-    {
-        //means the vector is non zero
-        //slog("GFC_PI: %f", GFC_PI);
-        if (ent->rotatable) {
-            ent->rotation = (vector2d_angle(ent->velocity) + 180);
-        }
-        //        angle_clamp_radians(&ent->rotation);
-    }
+    //somewhere here? check if body doesnt exist. if it doesnt delete the whole entity
 
-    //update body stuff as well
-    vector2d_add(ent->body.position, ent->body.position, ent->body.velocity);
-    //maybe a hacky way to make sure sprite is also doing the collision stuff
-    ent->position = ent->body.position;
+    if (!ent)return;
+
+    //need to delete data from list before freeing ENTITIES, so...
+    if (!gfc_line_cmp(ent->body.name, "FREEME")) {
+        //slog("freeing?");
+        gfc_list_delete_data(level_get_active_level()->activeEntities, ent);
+        entity_free(ent);
+    }
+    else {
+        if (ent->update)
+        {
+            if (ent->update(ent))return;// if the update function returns 1, do not do generic update
+        }
+        ent->frame += 0.1;
+        if (ent->frame >= 16)ent->frame = 0;
+        vector2d_add(ent->position, ent->position, ent->velocity);
+        if (vector2d_magnitude_compare(ent->velocity, 0) != 0)
+        {
+            //means the vector is non zero
+            //slog("GFC_PI: %f", GFC_PI);
+            if (ent->rotatable) {
+                ent->rotation = (vector2d_angle(ent->velocity) + 180);
+            }
+            //        angle_clamp_radians(&ent->rotation);
+        }
+
+        //update body stuff as well
+        vector2d_add(ent->body.position, ent->body.position, ent->body.velocity);
+        //maybe a hacky way to make sure sprite is also doing the collision stuff
+        ent->position = ent->body.position;
+    }
 }
 
 void entity_update_all()

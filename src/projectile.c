@@ -15,6 +15,9 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
     ent = entity_new();
     if (!ent)return NULL;
 
+    gfc_line_cpy(ent->name, "proj");
+    gfc_line_cpy(ent->body.name, "proj");
+
     ent->think = projectile_think;
     //ent->update = projectile_update;
     ent->draw = projectile_draw;
@@ -33,7 +36,7 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
 
     ent->rotation += GFC_HALF_PI;
     ent->speed = speed;
-    ent->health = 500;
+    ent->health = 100;
     ent->damage = damage;
 
     level_add_entity(level_get_active_level(), ent);
@@ -43,7 +46,11 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
 void projectile_think(Entity* self) {
     if (!self)return;
     self->health--;
-    if (self->health <= 0)entity_free(self);
+    if (self->health <= 0) {
+        gfc_list_delete_data(level_get_active_level()->activeBodies, &self->body);
+        gfc_list_delete_data(level_get_active_level()->activeEntities, self);
+        entity_free(self);
+    }
 }
 
 void projectile_draw(Entity* self) {
