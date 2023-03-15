@@ -7,6 +7,8 @@
 #include "gf2d_graphics.h"
 
 #include "level.h"
+#include "entity.h"
+#include "body.h"
 
 void level_build(Level* level);
 
@@ -191,7 +193,61 @@ void level_build(Level* level) {
     level->tileLayer->frame_w = level->tileLayer->surface->w;
     level->tileLayer->frame_h = level->tileLayer->surface->h;
     level->tileLayer->frames_per_line = 1;
-    
+    level_build_static_collision_layer(level);
+}
+
+void level_build_static_collision_layer(Level* level) {
+    Shape shape;
+    Shape* newShape;
+    int i, j;
+    if ((!level) || (!level->tileLayer))return;
+
+    for (j = 0; j < level->mapSize.y; j++)//j is row
+    {
+        for (i = 0; i < level->mapSize.x; i++)// i is column
+        {
+            if (level->tileMap[(j * (int)level->mapSize.x) + i] <= 0)continue;//skip zero
+            //shape = gfc_shape_rect(i * level->tileSize.x, j * level->tileSize.y, level->tileSize.x, level->tileSize.y);
+            shape = gfc_shape_rect(i * level->tileSize.x + (1200 / 2 - level->tileLayer->surface->w / 2), j * level->tileSize.y + (720 / 2 - level->tileLayer->surface->h / 2), level->tileSize.x, level->tileSize.y);
+
+            newShape = (Shape*)malloc(sizeof(shape));
+            if (!newShape)
+            {
+                slog("failed to allocate new space for the shape");
+                return;
+            }
+            memcpy(newShape, &shape, sizeof(Shape));
+
+            level->staticShapes = gfc_list_append(level->staticShapes, (void*)newShape);
+        }
+    }
+}
+
+void level_draw_static_shapes(Level* level) {
+    Shape* s;
+
+    for (int i = 0; i < level->staticShapes->count; i++) {
+        s = gfc_list_get_nth(level->staticShapes, i);
+        gf2d_draw_shape(*s, GFC_COLOR_YELLOW, vector2d(0, 0));
+    }
+}
+
+void level_draw_active_entities_bodies(Level* level) {
+    Entity* ent;
+
+    for (int i = 0; i < level->activeEntities->count; i++) {
+        ent = gfc_list_get_nth(level->activeEntities, i);
+        body_draw(&ent->body, vector2d(0, 0));
+    }
+}
+
+void level_add_entity(Level* level, Entity* entity) {
+    level->activeEntities = gfc_list_append(level->activeEntities, entity);
+    level->activeBodies = gfc_list_append(level->activeBodies, &entity->body);
+}
+
+List* level_get_active_bodies(Level* level) {
+    return level->activeEntities;
 }
 
 void level_draw(Level* level)
@@ -204,7 +260,9 @@ void level_draw(Level* level)
 Level* level_new() {
 	Level* level;
 	level = gfc_allocate_array(sizeof(Level), 1);
-	level->clips = gfc_list_new();
+	level->staticShapes = gfc_list_new();
+    level->activeEntities = gfc_list_new();
+    level->activeBodies = gfc_list_new();
 	return level;
 }
 
@@ -214,8 +272,12 @@ void level_free(Level* level) {
     if (level->tileSetAlt)gf2d_sprite_free(level->tileSetAlt);
 	if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
 	if (level->tileMap)free(level->tileMap);
-	gfc_list_foreach(level->clips, free);
-	gfc_list_delete(level->clips);
+	gfc_list_foreach(level->staticShapes, free);
+	gfc_list_delete(level->staticShapes);
+    //gfc_list_foreach(level->activeBodies, free);
+    gfc_list_delete(level->activeBodies);
+    //gfc_list_foreach(level->activeEntities, free);
+    gfc_list_delete(level->activeEntities);
 	free(level);
 }
 
