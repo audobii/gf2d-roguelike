@@ -98,6 +98,7 @@ void gf2d_collision_update(List* list) {
 
         //check if projectile hitting wall - delete body if so
         if (!gfc_line_cmp(b->name, "proj")) {
+            //VERY HACKY WAY TO DO THIS... BUT IT WORKS FOR NOW
             gfc_list_delete_data(level_get_active_level()->activeBodies, b);
             gfc_line_cpy(b->name, "FREEME");
         }

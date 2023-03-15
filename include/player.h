@@ -23,5 +23,16 @@ Entity* player_get();
  */
 Vector2D player_get_position();
 
+/**
+ * @brief get player's current mana value
+ * @return the player's mana
+ */
+Uint32 player_get_mana();
+
+/**
+ * @brief draw player's HUD
+ */
+void player_draw_hud();
+
 
 #endif

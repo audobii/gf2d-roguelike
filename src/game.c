@@ -90,14 +90,8 @@ int main(int argc, char * argv[])
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
             level_draw(level_get_active_level());
 
-            //gf2d_draw_shape(test_shape, GFC_COLOR_RED, vector2d(0, 0));
-
             entity_draw_all();
-
-            //body_draw(&player_get()->body, vector2d(0, 0));
-            //body_draw(&ent->body, vector2d(0, 0));
             
-            //level_draw_active_entities_bodies(level);
             level_draw_static_shapes(level);
 
             //UI elements last
@@ -111,6 +105,8 @@ int main(int argc, char * argv[])
                 &mouseColor,
                 0 //(int)mf
                 );
+
+            player_draw_hud(player_get());
 
             gf2d_collision_update(collisions);
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
