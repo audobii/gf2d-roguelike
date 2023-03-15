@@ -24,6 +24,22 @@ Entity* player_get() {
     return ThePlayer;
 }
 
+Uint32 player_get_mana() {
+    PlayerData* pdata;
+
+    pdata = ThePlayer->data;
+
+    return pdata->mana;
+}
+
+void player_set_mana(Uint32 newMana) {
+    PlayerData* pdata;
+
+    pdata = ThePlayer->data;
+
+    pdata->mana = newMana;
+}
+
 Vector2D player_get_position() {
     if (ThePlayer == NULL)return;
     return ThePlayer->position;
@@ -45,14 +61,14 @@ Entity* player_new(Vector2D position) {
 	ent->draw = player_draw;
 	ent->free_entity = player_free;
 
-    ent->health = 100;
+    ent->health = 350;
 
 	vector2d_copy(ent->position, position);
 	ent->speed = 2.5;
 
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
-		data->mana = 100;
+		data->mana = 50;
 		ent->data = data;
 	}
 
@@ -133,9 +149,10 @@ void player_think(Entity* self) {
     //internal timer is a temporary fix to input_key_pressed not working...
     internal_timer += 0.1;
     
-    if (gfc_input_command_down("attack") && internal_timer > 5.0) {
+    if (gfc_input_command_down("attack") && internal_timer > 5.0 && player_get_mana() >= 10) {
         player_attack(self);
         internal_timer = 0;
+        player_set_mana(player_get_mana() - 10);
     }
 
 }
@@ -156,6 +173,23 @@ void player_draw(Entity* self) {
     //draw body for collisions at this pos? idk
     gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
     gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
+}
+
+void player_draw_hud(Entity* self) {
+    if (!self)return;
+    Sprite* bar = gf2d_sprite_load_image("images/bar.png");
+
+    //health
+    if (self->health > 0) {
+        gf2d_draw_rect_filled(gfc_rect(10, 10, self->health, 25), GFC_COLOR_RED);
+    }
+    gf2d_sprite_draw_image(bar, vector2d(10, 10));
+
+    //mana
+    if (player_get_mana() > 0) {
+        gf2d_draw_rect_filled(gfc_rect(25, 35, player_get_mana(), 25), GFC_COLOR_BLUE);
+    }
+    gf2d_sprite_draw_image(bar, vector2d(25, 35));
 }
 
 void player_free(Entity* self)
