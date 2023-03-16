@@ -118,13 +118,14 @@ void entity_update(Entity* ent)
     //need to delete data from list before freeing ENTITIES, so...
     if (!gfc_line_cmp(ent->body.name, "FREEME")) {
         //slog("freeing?");
+        gfc_list_delete_data(level_get_active_level()->activeBodies, &ent->body);
         gfc_list_delete_data(level_get_active_level()->activeEntities, ent);
         entity_free(ent);
     }
     else {
         if (ent->update)
         {
-            if (ent->update(ent))return;// if the update function returns 1, do not do generic update
+            ent->update(ent);// if the update function returns 1, do not do generic update
         }
         ent->frame += 0.1;
         if (ent->frame >= 16)ent->frame = 0;

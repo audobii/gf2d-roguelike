@@ -19,7 +19,7 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
     gfc_line_cpy(ent->body.name, "proj");
 
     ent->think = projectile_think;
-    //ent->update = projectile_update;
+    ent->update = projectile_update;
     ent->draw = projectile_draw;
 
     ent->shape = gfc_shape_circle(0, 0, 5);// shape position becomes offset from entity position, in this case zero
@@ -47,9 +47,7 @@ void projectile_think(Entity* self) {
     if (!self)return;
     self->health--;
     if (self->health <= 0) {
-        gfc_list_delete_data(level_get_active_level()->activeBodies, &self->body);
-        gfc_list_delete_data(level_get_active_level()->activeEntities, self);
-        entity_free(self);
+        projectile_free(self);
     }
 }
 
@@ -59,5 +57,46 @@ void projectile_draw(Entity* self) {
 }
 
 void projectile_update(Entity* self) {
+    //loop through active bodies of curr level. and check collision w each of them
+    //skip over this projectile, other projectiles
+    //if collide, do damage and disappear
 
+    List* activeEnts;
+    Entity* other;
+    Collision* collision;
+
+    activeEnts = level_get_active_level()->activeEntities;
+
+    if (!activeEnts)return;
+
+    for (int i = 0; i < gfc_list_get_count(activeEnts); i++) {
+        other = gfc_list_get_nth(activeEnts, i);
+
+        if (other == self)continue;
+        //if (!gfc_line_cmp(other->body.name, "proj"))continue;
+        if (other->body.team == self->body.team)continue;
+
+        collision = gf2d_collision_body_body(&self->body, &other->body);
+
+        if (!collision)continue;
+        //slog("owie");
+
+        char str[20];
+        sprintf(str, "%f", self->damage);
+        slog(str);
+
+        //do damage
+        if (other->takeDamage)other->takeDamage(other, self->damage, self);
+        //slog(other->name);
+
+        projectile_free(self);
+        return;
+    }
+
+}
+
+void projectile_free(Entity* ent) {
+    gfc_list_delete_data(level_get_active_level()->activeBodies, &ent->body);
+    gfc_list_delete_data(level_get_active_level()->activeEntities, ent);
+    entity_free(ent);
 }

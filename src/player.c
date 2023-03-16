@@ -1,13 +1,17 @@
+#include <SDL_ttf.h>
 #include "simple_logger.h"
 
 #include "gfc_input.h"
 
 #include "gf2d_draw.h"
 #include "gf2d_mouse.h"
+#include "gf2d_graphics.h"
 
 #include "level.h"
 #include "player.h"
 #include "projectile.h"
+
+#include "entity_common.h"
 
 void player_think(Entity* self);
 void player_draw(Entity* self);
@@ -18,6 +22,7 @@ static float internal_timer = 0;
 
 typedef struct {
 	Uint32 mana;
+    Uint8 currentAbility; //-1 if none; 1/2/3/4/5 for each ability
 }PlayerData;
 
 Entity* player_get() {
@@ -60,6 +65,7 @@ Entity* player_new(Vector2D position) {
 	ent->think = player_think;
 	ent->draw = player_draw;
 	ent->free_entity = player_free;
+    ent->takeDamage = entity_damage;
 
     ent->health = 350;
 
@@ -68,7 +74,7 @@ Entity* player_new(Vector2D position) {
 
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
-		data->mana = 50;
+		data->mana = 350;
 		ent->data = data;
 	}
 
@@ -97,7 +103,7 @@ void player_attack(Entity* self) {
 
     //dir = vector2d_from_angle(self->rotation);
     
-    projectile_new(self, self->body.position, dir, 5, 5);
+    projectile_new(self, self->body.position, dir, 5, 10);
     
 }
 
@@ -178,6 +184,13 @@ void player_draw(Entity* self) {
 void player_draw_hud(Entity* self) {
     if (!self)return;
     Sprite* bar = gf2d_sprite_load_image("images/bar.png");
+    //??? how to write text
+    TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
+    SDL_Color white = { 255,255,255 };
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
 
     //health
     if (self->health > 0) {
@@ -190,6 +203,10 @@ void player_draw_hud(Entity* self) {
         gf2d_draw_rect_filled(gfc_rect(25, 35, player_get_mana(), 25), GFC_COLOR_BLUE);
     }
     gf2d_sprite_draw_image(bar, vector2d(25, 35));
+
+    TTF_CloseFont(font);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
 }
 
 void player_free(Entity* self)

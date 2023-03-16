@@ -80,6 +80,34 @@ Collision* gf2d_collision_body_shape(Shape s, Body* b) {
     return collision;
 }
 
+//this is already a thing in Body.h .... oops
+Collision* gf2d_collision_body_body(Body* b1, Body* b2) {
+    Shape b1_shape, b2_shape;
+    Collision* collision;
+
+    Vector2D poc, normal;
+    if (!b1 || !b2)return NULL;
+
+    b1_shape = body_to_shape(b1);
+    b2_shape = body_to_shape(b2);
+
+    if (!gfc_shape_overlap_poc(b1_shape, b2_shape, &poc, &normal))
+    {
+        return NULL;
+    }
+
+    collision = collision_new();
+    collision->collided = 1;
+    collision->blocked = 1;
+    vector2d_copy(collision->pointOfContact, poc);
+    vector2d_copy(collision->normal, normal);
+    collision->shape = *b2->shape;
+    collision->body = b2;
+    collision->bounds = 0;
+    collision->timeStep = 0;
+    return collision;
+}
+
 void gf2d_collision_update(List* list) {
     Body* b;
 
@@ -99,7 +127,7 @@ void gf2d_collision_update(List* list) {
         //check if projectile hitting wall - delete body if so
         if (!gfc_line_cmp(b->name, "proj")) {
             //VERY HACKY WAY TO DO THIS... BUT IT WORKS FOR NOW
-            gfc_list_delete_data(level_get_active_level()->activeBodies, b);
+            //gfc_list_delete_data(level_get_active_level()->activeBodies, b);
             gfc_line_cpy(b->name, "FREEME");
         }
 

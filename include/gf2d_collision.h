@@ -50,6 +50,12 @@ void gf2d_collision_list_free(List* list);
 Collision* gf2d_collision_body_shape(Shape s, Body* b);
 
 /**
+ * @brief check if there is overlap (collision) between 2 bodies/active entities
+ * @return NULL if no collision, new Collision otherwise
+ */
+Collision* gf2d_collision_body_body(Body* b1, Body* b2);
+
+/**
  * @brief build list of collisions based on static shapes and active bodies list
  * @param collisions the list of collisions to add to
  * @param staticShapes the list of static shapes to check against

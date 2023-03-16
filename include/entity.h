@@ -29,12 +29,13 @@ typedef struct Entity_S
     int (*update)(struct Entity_S* self);
     void (*draw)(struct Entity_S* self);
     void (*free_entity)(struct Entity_S* self);//cleanup of custom data if defined
+    void (*takeDamage)(struct Entity_S* self);
     void* data;
 
     Bool rotatable;
     TextLine name;
 
-    Uint32 health;
+    float health;
     float damage;
 }Entity;
 
