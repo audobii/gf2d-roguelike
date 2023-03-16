@@ -19,10 +19,13 @@ void player_free(Entity* self);
 
 static Entity* ThePlayer = NULL;
 static float internal_timer = 0;
+static float ability_timer = 0;
 
 typedef struct {
 	Uint32 mana;
     Uint8 currentAbility; //-1 if none; 1/2/3/4/5 for each ability
+    Bool abilityActive;
+    Uint32 money;
 }PlayerData;
 
 Entity* player_get() {
@@ -67,7 +70,7 @@ Entity* player_new(Vector2D position) {
 	ent->free_entity = player_free;
     ent->takeDamage = entity_damage;
 
-    ent->health = 350;
+    ent->health = 150;
 
 	vector2d_copy(ent->position, position);
 	ent->speed = 2.5;
@@ -75,6 +78,9 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
+        data->currentAbility = 3;
+        data->abilityActive = false;
+        data->money = 0;
 		ent->data = data;
 	}
 
@@ -89,7 +95,7 @@ Entity* player_new(Vector2D position) {
 
 void player_attack(Entity* self) {
     //slog("atk");
-    Vector2D m, dir;
+    Vector2D m, dir, dir1, dir2;
     int mx, my;
 
     PlayerData* data;
@@ -103,8 +109,26 @@ void player_attack(Entity* self) {
 
     //dir = vector2d_from_angle(self->rotation);
     
-    projectile_new(self, self->body.position, dir, 5, 10);
+    projectile_new(self, self->body.position, dir, 5, 10.0);
     
+    if (data->abilityActive) {
+        if (data->currentAbility == 1) { //triple shot
+            slog("TRIPLE");
+            dir1.x = dir.x + 150;
+            dir1.y = dir.y;
+            dir2.x = dir.x - 150;
+            dir2.y = dir.y;
+            projectile_new(self, self->body.position, dir1, 5, 10.0);
+            projectile_new(self, self->body.position, dir2, 5, 10.0);
+        }
+
+        else if (data->currentAbility == 3) { //self destruct
+            slog("SELF DESTRUCT");
+            //TODO: spawn projectiles in ring around player
+
+            ThePlayer->health -= 50;
+        }
+    }
 }
 
 void player_think(Entity* self) {
@@ -113,7 +137,11 @@ void player_think(Entity* self) {
     Vector2D dir;
     Vector2D m = { 0 };
     Vector2D walk = { 0 };
+    PlayerData* data;
+
     if (!self)return;
+
+    data = ThePlayer->data;
 
     SDL_GetMouseState(&mx, &my);
     m.x = mx;
@@ -137,6 +165,11 @@ void player_think(Entity* self) {
         walk.x += 1;
     }
 
+    if (gfc_input_command_down("activateAbility"))
+    {
+        player_activate_ability();
+    }
+
     if ((walk.x) || (walk.y))
     {
         vector2d_normalize(&walk);
@@ -155,12 +188,30 @@ void player_think(Entity* self) {
     //internal timer is a temporary fix to input_key_pressed not working...
     internal_timer += 0.1;
     
+    if (data->abilityActive) {
+        ability_timer += 0.1;
+        
+        if (data->currentAbility == 2) { //2 = heal over time
+            if ((int)ability_timer % 5 == 0) {
+                ThePlayer->health += 2.5;
+            }
+        }
+
+        else if (data->currentAbility == 3) { //3 - bomb; do big damage around yourself but take some health/chip dmg
+
+        }
+    }
+    
     if (gfc_input_command_down("attack") && internal_timer > 5.0 && player_get_mana() >= 10) {
         player_attack(self);
         internal_timer = 0;
         player_set_mana(player_get_mana() - 10);
     }
 
+    if (ability_timer > 16.0) { //cooldown sorta
+        player_deactivate_ability();
+        ability_timer = 0;
+    }
 }
 
 void player_draw(Entity* self) {
@@ -207,6 +258,27 @@ void player_draw_hud(Entity* self) {
     TTF_CloseFont(font);
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
+}
+
+void player_set_ability(Entity* self, Uint8 ability) {
+    PlayerData* pdata;
+    pdata = ThePlayer->data;
+
+    pdata->currentAbility = ability;
+}
+
+void player_activate_ability() {
+    PlayerData* pdata;
+    pdata = ThePlayer->data;
+
+    pdata->abilityActive = true;
+}
+
+void player_deactivate_ability() {
+    PlayerData* pdata;
+    pdata = ThePlayer->data;
+
+    pdata->abilityActive = false;
 }
 
 void player_free(Entity* self)

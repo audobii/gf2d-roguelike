@@ -50,7 +50,7 @@
             "keys":[" "]
         },
         {
-            "command":"activate",
+            "command":"activateAbility",
             "keys":["e"]
         },
         {

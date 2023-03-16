@@ -11,7 +11,7 @@
  * @param position where to spawn the projectile at
  * @param dir the direction to move in
  * @param speed how fast we move
- * @param damage how much damage we will
+ * @param damage how much damage we will do
  * @return NULL on failure, or a pointer to the new projectile
  */
 Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float speed, float damage);

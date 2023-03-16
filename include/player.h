@@ -34,5 +34,8 @@ Uint32 player_get_mana();
  */
 void player_draw_hud();
 
+void player_activate_ability();
+
+void player_deactivate_ability();
 
 #endif
