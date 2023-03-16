@@ -11,6 +11,7 @@
 #include "player.h"
 #include "projectile.h"
 
+#include "gf2d_collision.h"
 #include "entity_common.h"
 
 void player_think(Entity* self);
@@ -78,7 +79,7 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 3;
+        data->currentAbility = 4;
         data->abilityActive = false;
         data->money = 0;
 		ent->data = data;
@@ -109,25 +110,47 @@ void player_attack(Entity* self) {
 
     //dir = vector2d_from_angle(self->rotation);
     
-    projectile_new(self, self->body.position, dir, 5, 10.0);
-    
     if (data->abilityActive) {
-        if (data->currentAbility == 1) { //triple shot
+        if (data->currentAbility == 1) { //ABILITY 1: triple shot
             slog("TRIPLE");
+            projectile_new(self, self->body.position, dir, 5, 10.0, 5, 100);
             dir1.x = dir.x + 150;
             dir1.y = dir.y;
             dir2.x = dir.x - 150;
             dir2.y = dir.y;
-            projectile_new(self, self->body.position, dir1, 5, 10.0);
-            projectile_new(self, self->body.position, dir2, 5, 10.0);
+            projectile_new(self, self->body.position, dir1, 5, 10.0, 5, 100);
+            projectile_new(self, self->body.position, dir2, 5, 10.0, 5, 100);
         }
 
-        else if (data->currentAbility == 3) { //self destruct
+        else if (data->currentAbility == 3) { //ABILITY 3: self destruct
             slog("SELF DESTRUCT");
+            Vector2D temp, dir3, dir4;
+            vector2d_negate(temp, dir);
             //TODO: spawn projectiles in ring around player
+            //a temporary mess
+            projectile_new(self, self->body.position, dir, 5, 20.0, 20, 20);
+            projectile_new(self, self->body.position, temp, 5, 20.0, 20, 20);
+            
+            dir1.x = dir.x + 350;
+            dir1.y = dir.y;
+            dir2.x = dir.x - 350;
+            dir2.y = dir.y;
 
+            dir3.x = temp.x + 350;
+            dir3.y = temp.y;
+            dir4.x = temp.x - 350;
+            dir4.y = temp.y;
+
+            projectile_new(self, self->body.position, dir1, 5, 20.0, 20, 20);
+            projectile_new(self, self->body.position, dir2, 5, 20.0, 20, 20);
+            projectile_new(self, self->body.position, dir3, 5, 20.0, 20, 20);
+            projectile_new(self, self->body.position, dir4, 5, 20.0, 20, 20);
             ThePlayer->health -= 50;
         }
+
+    }
+    else { //normal atk
+        projectile_new(self, self->body.position, dir, 5, 10.0, 5, 100);
     }
 }
 
@@ -191,14 +214,38 @@ void player_think(Entity* self) {
     if (data->abilityActive) {
         ability_timer += 0.1;
         
-        if (data->currentAbility == 2) { //2 = heal over time
+        if (data->currentAbility == 2) { //ABILITY 2: heal over time
             if ((int)ability_timer % 5 == 0) {
                 ThePlayer->health += 2.5;
             }
         }
 
-        else if (data->currentAbility == 3) { //3 - bomb; do big damage around yourself but take some health/chip dmg
+        else if (data->currentAbility == 4) { //ABILITY 4: rage mode
+            //copied over from projectile update
+            List* activeEnts;
+            Entity* other;
+            Collision* collision;
 
+            activeEnts = level_get_active_level()->activeEntities;
+
+            if (!activeEnts)return;
+
+            for (int i = 0; i < gfc_list_get_count(activeEnts); i++) {
+                other = gfc_list_get_nth(activeEnts, i);
+
+                if (other == self)continue;
+                //if (!gfc_line_cmp(other->body.name, "proj"))continue;
+                if (other->body.team == self->body.team)continue;
+
+                collision = gf2d_collision_body_body(&self->body, &other->body);
+
+                if (!collision)continue;
+                //slog("owie");
+
+                //do damage
+                if (other->takeDamage)other->takeDamage(other, 30, self);
+                //slog(other->name);
+            }
         }
     }
     
@@ -267,6 +314,13 @@ void player_set_ability(Entity* self, Uint8 ability) {
     pdata->currentAbility = ability;
 }
 
+Uint8 player_get_ability() {
+    PlayerData* pdata;
+    pdata = ThePlayer->data;
+
+    return pdata->currentAbility;
+}
+
 void player_activate_ability() {
     PlayerData* pdata;
     pdata = ThePlayer->data;
@@ -279,6 +333,13 @@ void player_deactivate_ability() {
     pdata = ThePlayer->data;
 
     pdata->abilityActive = false;
+}
+
+Bool player_ability_is_active() {
+    PlayerData* pdata;
+    pdata = ThePlayer->data;
+
+    return pdata->abilityActive;
 }
 
 void player_free(Entity* self)

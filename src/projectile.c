@@ -5,12 +5,13 @@
 
 #include "level.h"
 #include "projectile.h"
+#include "player.h"
 
 void projectile_think(Entity* self);
 void projectile_draw(Entity* self);
 void projectile_update(Entity* self);
 
-Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float speed, float damage) {
+Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float speed, float damage, int size, int health) {
     Entity* ent;
     ent = entity_new();
     if (!ent)return NULL;
@@ -22,7 +23,7 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
     ent->update = projectile_update;
     ent->draw = projectile_draw;
 
-    ent->shape = gfc_shape_circle(0, 0, 5);// shape position becomes offset from entity position, in this case zero
+    ent->shape = gfc_shape_circle(0, 0, size);// shape position becomes offset from entity position, in this case zero
     ent->body.shape = &ent->shape;
 
     if (parent)
@@ -36,7 +37,7 @@ Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float sp
 
     ent->rotation += GFC_HALF_PI;
     ent->speed = speed;
-    ent->health = 100;
+    ent->health = health;
     ent->damage = damage;
 
     level_add_entity(level_get_active_level(), ent);
@@ -53,7 +54,17 @@ void projectile_think(Entity* self) {
 
 void projectile_draw(Entity* self) {
     if (!self)return;
-    gf2d_draw_circle(self->body.position, 10, GFC_COLOR_RED);
+    if (self->body.team == 1) {
+        if (player_get_ability() == 3 && player_ability_is_active()) {
+            gf2d_draw_circle(self->body.position, 10, GFC_COLOR_RED);
+        }
+        else {
+            gf2d_draw_circle(self->body.position, 10, GFC_COLOR_BLUE);
+        }
+    }
+    else {
+        gf2d_draw_circle(self->body.position, 10, GFC_COLOR_GREEN);
+    }
 }
 
 void projectile_update(Entity* self) {
@@ -81,9 +92,10 @@ void projectile_update(Entity* self) {
         if (!collision)continue;
         //slog("owie");
 
-        char str[20];
-        sprintf(str, "%f", self->damage);
-        slog(str);
+        //print dmg before it goes into takeDamage function - it works and is correct
+        //char str[20];
+        //sprintf(str, "%f", self->damage);
+        //slog(str);
 
         //do damage
         if (other->takeDamage)other->takeDamage(other, self->damage, self);

@@ -38,4 +38,11 @@ void player_activate_ability();
 
 void player_deactivate_ability();
 
+Uint8 player_get_ability();
+
+/**
+ * @return true if player ability is active; false if otherwise
+ */
+Bool player_ability_is_active();
+
 #endif

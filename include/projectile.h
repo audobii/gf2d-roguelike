@@ -12,9 +12,11 @@
  * @param dir the direction to move in
  * @param speed how fast we move
  * @param damage how much damage we will do
+ * @param size how big the projectile body will be
+ * @param health how much health the projectile has (how long it will last)
  * @return NULL on failure, or a pointer to the new projectile
  */
-Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float speed, float damage);
+Entity* projectile_new(Entity* parent, Vector2D position, Vector2D dir, float speed, float damage, int size, int health);
 
 /**
  * @brief free a previously allocated projectile entity after removing it from related lists
