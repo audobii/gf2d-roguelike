@@ -37,6 +37,8 @@ typedef struct Entity_S
 
     float health;
     float damage;
+
+    Bool isPoisoned;
 }Entity;
 
 /**

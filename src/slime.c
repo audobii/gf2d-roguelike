@@ -75,6 +75,17 @@ void slime_think(Entity* self)
         internal_timer = 0;
     }
     */
+
+    if (self->isPoisoned) {
+        self->health -= 0.1;
+    }
+
+    if (self->health <= 0)
+    {
+        slog("died...");
+        entity_clear_from_level(self);
+        entity_free(self);
+    }
 }
 
 /*eol@eof*/

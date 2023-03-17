@@ -57,6 +57,9 @@ void projectile_draw(Entity* self) {
     if (self->body.team == 1) {
         if (player_get_ability() == 3 && player_ability_is_active()) {
             gf2d_draw_circle(self->body.position, 10, GFC_COLOR_RED);
+        } 
+        else if (player_get_ability() == 5 && player_ability_is_active()) {
+            gf2d_draw_circle(self->body.position, 10, gfc_color8(134, 252, 160, 255));
         }
         else {
             gf2d_draw_circle(self->body.position, 10, GFC_COLOR_BLUE);

@@ -20,6 +20,10 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
     if (player_ability_is_active() && player_get_ability() == 4 && self->body.team != 1) { //for ability 4 - just insta kill them
         self->health = 0;
     }
+    else if (player_ability_is_active() && player_get_ability() == 5 && self->body.team != 1) { //for ability 5 - poison and do a little damage
+        self->health -= 1;
+        self->isPoisoned = true;
+    }
     else {
         self->health -= 10; //hardcoded, supposed to be damage 
     }

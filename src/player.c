@@ -79,7 +79,7 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 4;
+        data->currentAbility = 5;
         data->abilityActive = false;
         data->money = 0;
 		ent->data = data;
@@ -146,6 +146,10 @@ void player_attack(Entity* self) {
             projectile_new(self, self->body.position, dir3, 5, 20.0, 20, 20);
             projectile_new(self, self->body.position, dir4, 5, 20.0, 20, 20);
             ThePlayer->health -= 50;
+        }
+
+        else if (data->currentAbility == 5) { //ABILITY 5: poison darts
+            projectile_new(self, self->body.position, dir, 5, 10.0, 2, 100);
         }
 
     }
