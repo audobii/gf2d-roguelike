@@ -3,6 +3,7 @@
 
 #include "level.h"
 #include "player.h"
+#include "slime.h"
 
 void entity_damage(Entity* self, float damage, Entity* inflictor)
 {
@@ -31,6 +32,12 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
     if (self->health <= 0)
     {
         slog("died...");
+        if (!gfc_line_cmp(self->name, "big_slime")) { //if big slime, split into two smaller ones
+            Vector2D offset_pos;
+            offset_pos = vector2d(self->position.x + 40, self->position.y + 40);
+            level_add_entity(level_get_active_level(), slime_new(self->position));
+            level_add_entity(level_get_active_level(), slime_new(offset_pos));
+        }
         entity_clear_from_level(self);
         entity_free(self);
     }
