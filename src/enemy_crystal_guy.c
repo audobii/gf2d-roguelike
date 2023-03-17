@@ -43,6 +43,7 @@ Entity* crystal_guy_new(Vector2D position)
 }
 
 void crystal_guy_draw(Entity* self) {
+    if (!self)return;
     gf2d_sprite_draw(
         self->sprite,
         self->position,

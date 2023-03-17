@@ -16,6 +16,7 @@
 #include "enemy_sentient_drill.h"
 #include "enemy_crystal_guy.h"
 #include "enemy_glowfly.h"
+#include "enemy_rock_block.h"
 
 #include "player.h"
 #include "gf2d_collision.h"
@@ -61,7 +62,7 @@ int main(int argc, char * argv[])
     //game window is 1200x720
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
-    ent = sentient_drill_new(vector2d(350,250));
+    ent = rock_block_new(vector2d(350,250));
 
     level = level_load("rooms/startRoom.json");
     level_set_active_level(level);

@@ -52,3 +52,8 @@ void entity_drop_loot(Entity* ent) {
     //TODO
     //to be added: currency, health/mana recovery items, boosts/powerups?
 }
+
+void entity_draw_still_image(Entity* ent) {
+    //TODO
+    //consolidate the code for all the entities that just draw a still image (player, some enemies)
+}
