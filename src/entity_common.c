@@ -47,3 +47,8 @@ void entity_clear_from_level(Entity* ent) {
     gfc_list_delete_data(level_get_active_level()->activeBodies, &ent->body);
     gfc_list_delete_data(level_get_active_level()->activeEntities, ent);
 }
+
+void entity_drop_loot(Entity* ent) {
+    //TODO
+    //to be added: currency, health/mana recovery items, boosts/powerups?
+}

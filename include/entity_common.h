@@ -17,4 +17,10 @@ void entity_damage(Entity* self, float damage, Entity* inflictor);
  */
 void entity_clear_from_level(Entity* ent);
 
+/**
+ * @brief to be used after entity dies - drop loot for player to pick up
+ * @param ent the entity to clear
+ */
+void entity_drop_loot(Entity* ent);
+
 #endif

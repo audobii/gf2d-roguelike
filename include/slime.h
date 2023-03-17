@@ -5,9 +5,9 @@
 #include "entity.h"
 
 /**
- * @brief spawn a new space bug at the given location
- * @param position where to spawn the bug at
- * @return NULL on failure, or a pointer to the new bug
+ * @brief spawn a new slime at the given location
+ * @param position where to spawn the slime at
+ * @return NULL on failure, or a pointer to the new slime
  */
 Entity* slime_new(Vector2D position);
 
