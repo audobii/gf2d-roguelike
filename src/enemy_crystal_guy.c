@@ -25,13 +25,13 @@ Entity* crystal_guy_new(Vector2D position)
     ent->takeDamage = entity_damage;
 
     vector2d_copy(ent->position, position);
-    ent->drawOffset = vector2d(32, 32);
+    ent->drawOffset = vector2d(32, 36);
     ent->speed = 0;
     ent->rotation = 0;
     ent->rotatable = false;
 
     //body/collision stuff
-    ent->shape = gfc_shape_circle(0, 0, 24);
+    ent->shape = gfc_shape_circle(0, 0, 28);
     ent->body.shape = &ent->shape;
     ent->body.team = 2;
     vector2d_copy(ent->body.position, position);
@@ -72,7 +72,7 @@ void crystal_guy_think(Entity* self)
     internal_timer += 0.1;
 
     if (internal_timer > 8.0) {
-        projectile_new(self, self->position, dir, 5, 12.0, 15, 40);
+        projectile_new(self, self->position, dir, 5, 12.0, 17, 40);
         internal_timer = 0;
     }
 

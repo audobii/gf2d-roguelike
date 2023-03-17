@@ -24,7 +24,7 @@ Entity* sentient_drill_new(Vector2D position)
     ent->takeDamage = entity_damage;
     vector2d_copy(ent->position, position);
     ent->drawOffset = vector2d(16, 16);
-    ent->speed = 1.5;
+    ent->speed = 2.0;
     ent->rotatable = true;
 
     //body/collision stuff
@@ -65,6 +65,18 @@ void sentient_drill_think(Entity* self)
 
     if (self->isPoisoned) {
         self->health -= 0.1;
+    }
+
+    internal_timer += 0.1;
+
+    if (internal_timer > 8.0) {
+        if (self->speed >= 2.0) {
+            self->speed = 1.0;
+        }
+        else {
+            self->speed = 2.0;
+        }
+        internal_timer = 0;
     }
 
     if (self->health <= 0)

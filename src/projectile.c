@@ -66,7 +66,7 @@ void projectile_draw(Entity* self) {
         }
     }
     else {
-        gf2d_draw_circle(self->body.position, 10, GFC_COLOR_GREEN);
+        gf2d_draw_circle(self->body.position, 10, GFC_COLOR_LIGHTCYAN);
     }
 }
 
