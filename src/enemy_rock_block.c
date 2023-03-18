@@ -98,6 +98,7 @@ void rock_block_think(Entity* self)
     {
         slog("died...");
         entity_clear_from_level(self);
+        entity_drop_loot(self);
         entity_free(self);
     }
 }

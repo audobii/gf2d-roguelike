@@ -18,6 +18,8 @@
 #include "enemy_glowfly.h"
 #include "enemy_rock_block.h"
 
+#include "pickup.h"
+
 #include "player.h"
 #include "gf2d_collision.h"
 
@@ -62,7 +64,7 @@ int main(int argc, char * argv[])
     //game window is 1200x720
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
-    ent = rock_block_new(vector2d(350,250));
+    ent = sentient_drill_new(vector2d(350,250));
 
     level = level_load("rooms/startRoom.json");
     level_set_active_level(level);
@@ -70,7 +72,7 @@ int main(int argc, char * argv[])
     player_new(vector2d(500, 500));
 
     //TEMPORARY 
-    //TODO: please add level_add_entity to every _new function
+    //TODO: please add level_add_entity to every _new function for enemies and player
     level_add_entity(level, player_get());
     level_add_entity(level, ent);
 

@@ -49,6 +49,22 @@ void player_set_mana(Uint32 newMana) {
     pdata->mana = newMana;
 }
 
+Uint32 player_get_money() {
+    PlayerData* pdata;
+
+    pdata = ThePlayer->data;
+
+    return pdata->money;
+}
+
+void player_set_money(Uint32 newMoney) {
+    PlayerData* pdata;
+
+    pdata = ThePlayer->data;
+
+    pdata->money = newMoney;
+}
+
 Vector2D player_get_position() {
     if (ThePlayer == NULL)return;
     return ThePlayer->position;
@@ -197,6 +213,13 @@ void player_think(Entity* self) {
         player_activate_ability();
     }
 
+    //TEMPORARY BC I CANT FIGURE OUT HOW TO PRINT TEXT TO SCREEN...
+    if (gfc_input_key_down("m")) {
+        char str[20];
+        sprintf(str, "%i", player_get_money());
+        slog(str);
+    }
+
     if ((walk.x) || (walk.y))
     {
         vector2d_normalize(&walk);
@@ -240,6 +263,7 @@ void player_think(Entity* self) {
                 if (other == self)continue;
                 //if (!gfc_line_cmp(other->body.name, "proj"))continue;
                 if (other->body.team == self->body.team)continue;
+                if (other->body.team == 0)continue;
 
                 collision = gf2d_collision_body_body(&self->body, &other->body);
 

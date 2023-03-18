@@ -5,6 +5,7 @@
 #include "player.h"
 #include "slime.h"
 #include "gf2d_collision.h"
+#include "pickup.h"
 
 void entity_damage(Entity* self, float damage, Entity* inflictor)
 {
@@ -44,6 +45,7 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
             player_game_over(self);
         }
         entity_clear_from_level(self);
+        entity_drop_loot(self);
         entity_free(self);
     }
 }
@@ -56,6 +58,9 @@ void entity_clear_from_level(Entity* ent) {
 void entity_drop_loot(Entity* ent) {
     //TODO
     //to be added: currency, health/mana recovery items, boosts/powerups?
+    int rand_num = (rand() % 3) + 1;
+
+    pickup_new(ent->position, rand_num);
 }
 
 void entity_draw_still_image(Entity* ent) {
