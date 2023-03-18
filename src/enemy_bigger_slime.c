@@ -67,16 +67,12 @@ void bigger_slime_think(Entity* self)
         vector2d_clear(self->body.velocity);
     }
 
-    /*
     internal_timer += 0.1;
 
     if (internal_timer > 5.0) {
-        char str[20];
-        sprintf(str, "%f", self->health);
-        slog(str);
+        entity_do_contact_damage(self);
         internal_timer = 0;
     }
-    */
 
     if (self->isPoisoned) {
         self->health -= 0.1;

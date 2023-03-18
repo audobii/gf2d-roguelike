@@ -23,4 +23,8 @@ void entity_clear_from_level(Entity* ent);
  */
 void entity_drop_loot(Entity* ent);
 
+void entity_draw_still_image(Entity* ent);
+
+void entity_do_contact_damage(Entity* ent);
+
 #endif

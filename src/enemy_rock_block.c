@@ -89,7 +89,8 @@ void rock_block_think(Entity* self)
 
     internal_timer += 0.1;
 
-    if (internal_timer > 8.0) {
+    if (internal_timer > 5.0) {
+        entity_do_contact_damage(self);
         internal_timer = 0;
     }
 

@@ -263,6 +263,10 @@ void player_think(Entity* self) {
         player_deactivate_ability();
         ability_timer = 0;
     }
+
+    if (self->health <= 0) {
+        player_game_over(self);
+    }
 }
 
 void player_draw(Entity* self) {
@@ -344,6 +348,13 @@ Bool player_ability_is_active() {
     pdata = ThePlayer->data;
 
     return pdata->abilityActive;
+}
+
+void player_game_over(Entity* self) {
+    if (!self)return;
+
+    slog("game over...");
+    player_free(self);
 }
 
 void player_free(Entity* self)

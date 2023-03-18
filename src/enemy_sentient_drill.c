@@ -28,7 +28,7 @@ Entity* sentient_drill_new(Vector2D position)
     ent->rotatable = true;
 
     //body/collision stuff
-    ent->shape = gfc_shape_circle(0, 0, 12);
+    ent->shape = gfc_shape_circle(0, 0, 14);
     ent->body.shape = &ent->shape;
     ent->body.team = 2;
     vector2d_copy(ent->body.position, position);
@@ -69,13 +69,14 @@ void sentient_drill_think(Entity* self)
 
     internal_timer += 0.1;
 
-    if (internal_timer > 8.0) {
+    if (internal_timer > 5.0) {
         if (self->speed >= 2.0) {
             self->speed = 1.0;
         }
         else {
             self->speed = 2.0;
         }
+        entity_do_contact_damage(self);
         internal_timer = 0;
     }
 

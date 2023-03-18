@@ -4,6 +4,7 @@
 #include "level.h"
 #include "player.h"
 #include "slime.h"
+#include "gf2d_collision.h"
 
 void entity_damage(Entity* self, float damage, Entity* inflictor)
 {
@@ -29,6 +30,7 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
         self->health -= 10; //hardcoded, supposed to be damage 
     }
 
+    //TODO: maybe make a die function for each entity and call it here; call a generic one if they dont have one
     if (self->health <= 0)
     {
         slog("died...");
@@ -37,6 +39,9 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
             offset_pos = vector2d(self->position.x + 40, self->position.y + 40);
             level_add_entity(level_get_active_level(), slime_new(self->position));
             level_add_entity(level_get_active_level(), slime_new(offset_pos));
+        }
+        else if (!gfc_line_cmp(self->name, "player")) { //if player dies handle it differently?
+            player_game_over(self);
         }
         entity_clear_from_level(self);
         entity_free(self);
@@ -56,4 +61,33 @@ void entity_drop_loot(Entity* ent) {
 void entity_draw_still_image(Entity* ent) {
     //TODO
     //consolidate the code for all the entities that just draw a still image (player, some enemies)
+}
+
+void entity_do_contact_damage(Entity* ent) {
+    //copied over from projectile update
+    //for enemies mostly
+    List* activeEnts;
+    Entity* other;
+    Collision* collision;
+
+    activeEnts = level_get_active_level()->activeEntities;
+
+    if (!activeEnts)return;
+
+    for (int i = 0; i < gfc_list_get_count(activeEnts); i++) {
+        other = gfc_list_get_nth(activeEnts, i);
+
+        if (other == ent)continue;
+        if (!gfc_line_cmp(other->body.name, "proj"))continue;
+        if (other->body.team == ent->body.team)continue;
+
+        collision = gf2d_collision_body_body(&ent->body, &other->body);
+
+        if (!collision)continue;
+        //slog("owie");
+
+        //do damage
+        if (other->takeDamage)other->takeDamage(other, 30, ent);
+        //slog(other->name);
+    }
 }

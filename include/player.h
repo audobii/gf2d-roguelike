@@ -45,4 +45,9 @@ Uint8 player_get_ability();
  */
 Bool player_ability_is_active();
 
+/**
+ * @brief trigger game over if player dies
+ */
+void player_game_over(Entity* self);
+
 #endif
