@@ -27,4 +27,11 @@ void entity_draw_still_image(Entity* ent);
 
 void entity_do_contact_damage(Entity* ent);
 
+/**
+ * @brief spawn enemy entity by name
+ * @param ent_name name of entity to spawn, as a textline
+ * @param pos position of entity to be spawned in
+ */
+Entity* entity_spawn_by_name(TextLine ent_name, Vector2D pos);
+
 #endif

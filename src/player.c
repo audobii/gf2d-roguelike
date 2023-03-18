@@ -242,7 +242,7 @@ void player_think(Entity* self) {
         ability_timer += 0.1;
         
         if (data->currentAbility == 2) { //ABILITY 2: heal over time
-            if ((int)ability_timer % 5 == 0) {
+            if ((int)ability_timer % 5 == 0 && ThePlayer->health < 347.5) {
                 ThePlayer->health += 2.5;
             }
         }
@@ -288,8 +288,11 @@ void player_think(Entity* self) {
         ability_timer = 0;
     }
 
+    //TODO: FIX THIS- causes a seg fault for some reason
     if (self->health <= 0) {
         player_game_over(self);
+        entity_clear_from_level(self);
+        entity_free(self);
     }
 }
 
@@ -318,6 +321,8 @@ void player_draw_hud(Entity* self) {
     }
     else {
         Sprite* bar = gf2d_sprite_load_image("images/bar.png");
+        Sprite* ability_blank = gf2d_sprite_load_image("images/ability_blank.png");
+        Sprite* curr_ability = NULL;
         //??? how to write text
         TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
         SDL_Color white = { 255,255,255 };
@@ -337,6 +342,30 @@ void player_draw_hud(Entity* self) {
             gf2d_draw_rect_filled(gfc_rect(25, 35, player_get_mana(), 25), GFC_COLOR_BLUE);
         }
         gf2d_sprite_draw_image(bar, vector2d(25, 35));
+
+        gf2d_sprite_draw_image(ability_blank, vector2d(-20, 550));
+
+        if (player_get_ability() != NULL || player_get_ability() != -1) {
+            switch (player_get_ability()) {
+            case 1:
+                curr_ability = gf2d_sprite_load_image("images/triple_shot_ability.png");
+                break;
+            case 2:
+                curr_ability = gf2d_sprite_load_image("images/heal_ability.png");
+                break;
+            case 3:
+                curr_ability = gf2d_sprite_load_image("images/self_destruct_ability.png");
+                break;
+            case 4:
+                curr_ability = gf2d_sprite_load_image("images/rage_mode_ability.png");
+                break;
+            case 5:
+                curr_ability = gf2d_sprite_load_image("images/poison_dart_ability.png");
+                break;
+            }
+            
+            if(curr_ability)gf2d_sprite_draw_image(curr_ability, vector2d(40, 600));
+        }
 
         TTF_CloseFont(font);
         SDL_DestroyTexture(texture);
