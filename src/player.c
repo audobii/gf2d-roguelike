@@ -288,31 +288,36 @@ void player_draw(Entity* self) {
 }
 
 void player_draw_hud(Entity* self) {
-    if (!self)return;
-    Sprite* bar = gf2d_sprite_load_image("images/bar.png");
-    //??? how to write text
-    TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
-    SDL_Color white = { 255,255,255 };
-
-    SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
-
-    //health
-    if (self->health > 0) {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, self->health, 25), GFC_COLOR_RED);
+    if (!self) {
+        Sprite* gameOverSprite = gf2d_sprite_load_image("images/game_over.png");
+        gf2d_sprite_draw_image(gameOverSprite, vector2d(500, 250));
     }
-    gf2d_sprite_draw_image(bar, vector2d(10, 10));
+    else {
+        Sprite* bar = gf2d_sprite_load_image("images/bar.png");
+        //??? how to write text
+        TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
+        SDL_Color white = { 255,255,255 };
 
-    //mana
-    if (player_get_mana() > 0) {
-        gf2d_draw_rect_filled(gfc_rect(25, 35, player_get_mana(), 25), GFC_COLOR_BLUE);
+        SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
+
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
+
+        //health
+        if (self->health > 0) {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, self->health, 25), GFC_COLOR_RED);
+        }
+        gf2d_sprite_draw_image(bar, vector2d(10, 10));
+
+        //mana
+        if (player_get_mana() > 0) {
+            gf2d_draw_rect_filled(gfc_rect(25, 35, player_get_mana(), 25), GFC_COLOR_BLUE);
+        }
+        gf2d_sprite_draw_image(bar, vector2d(25, 35));
+
+        TTF_CloseFont(font);
+        SDL_DestroyTexture(texture);
+        SDL_FreeSurface(surface);
     }
-    gf2d_sprite_draw_image(bar, vector2d(25, 35));
-
-    TTF_CloseFont(font);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
 }
 
 void player_set_ability(Entity* self, Uint8 ability) {
