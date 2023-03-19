@@ -264,17 +264,12 @@ void level_build_static_collision_layer(Level* level) {
 
 void level_spawn_enemies(Level* level) {
     List* enemies;
-    List* enemy_coords;
-    int x, y;
-    Entity* new_enemy;
-    List* coords;
-    slog("hii");
+
     enemies = level->enemiesToSpawn;
 
     if (gfc_list_get_count(enemies) <= 0) return;
 
     for (int i = 0; i < gfc_list_get_count(enemies); i++) {
-
         level_add_entity(level, gfc_list_get_nth(enemies, i));
     }
 }
@@ -320,7 +315,6 @@ Level* level_new() {
     level->activeEntities = gfc_list_new();
     level->activeBodies = gfc_list_new();
     level->enemiesToSpawn = gfc_list_new();
-    level->enemiesToSpawn_Coords = gfc_list_new();
 
 	return level;
 }
@@ -337,6 +331,7 @@ void level_free(Level* level) {
     gfc_list_delete(level->activeBodies);
     //gfc_list_foreach(level->activeEntities, free);
     gfc_list_delete(level->activeEntities);
+    gfc_list_delete(level->enemiesToSpawn);
 	free(level);
 }
 

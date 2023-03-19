@@ -27,7 +27,7 @@ typedef struct
     List* activeEntities;
     List* activeBodies;
     List* enemiesToSpawn;
-    List* enemiesToSpawn_Coords; //array of arrays [xpos, ypos]; one-to-one with enemies to spawn
+    Bool cleared;
 }Level;
 
 /**
