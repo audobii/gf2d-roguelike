@@ -11,6 +11,7 @@
 #include "body.h"
 
 #include "entity_common.h"
+#include "shop_item.h"
 
 void level_build(Level* level);
 void level_spawn_enemies(Level* level);
@@ -31,6 +32,7 @@ Level* level_load(const char* filename) {
     int j, d;
     int a, b;
     int x = 0, y = 0;
+    int t = 0;
     int tileFPL;
     const char* str;
     SJson* json, * lj, * list, * list2, * row, * row2, * item;
@@ -107,7 +109,29 @@ Level* level_load(const char* filename) {
 
             gfc_list_append(level->enemiesToSpawn, entity_spawn_by_name(enemy_name, vector2d(x,y)));
         }
+    }
 
+    //spawn in entities for level similar to spawning enemies
+    list = sj_object_get_value(lj, "entity_list");
+    list2 = sj_object_get_value(lj, "entity_coords");
+    if (list && list2) {
+        c = sj_array_get_count(list); //total entities in level
+
+        for (int i = 0; i < c; i++) {
+            coords = gfc_list_new();
+            row = sj_array_get_nth(list, i); //the entity
+            row2 = sj_array_get_nth(list2, i); //the coords
+
+            //slog(enemy_name);
+            a = sj_array_get_nth(row2, 0); //enemy pos x 
+            b = sj_array_get_nth(row2, 1); //enemy pos y
+
+            sj_get_integer_value(row, &t);
+            sj_get_integer_value(a, &x);
+            sj_get_integer_value(b, &y);
+
+            shop_item_new(vector2d(x, y), t);
+        }
     }
 
     list = sj_object_get_value(lj, "tileMap");

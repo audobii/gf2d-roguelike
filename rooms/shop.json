@@ -18,9 +18,9 @@
             [1,1,1,1,1,1,1,1,1,1,1,1,1]
         ],
         "entity_list":[
-            "triple_shot",
-            "heart",
-            "heal"
+            1,
+            6,
+            2
         ],
         "entity_coords":[
             [400, 300],
