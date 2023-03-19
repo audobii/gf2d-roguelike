@@ -19,6 +19,7 @@
 #include "enemy_rock_block.h"
 
 #include "pickup.h"
+#include "shop_item.h"
 
 #include "player.h"
 #include "gf2d_collision.h"
@@ -67,7 +68,7 @@ int main(int argc, char * argv[])
     //ent = rock_block_new(vector2d(800,250));
     //Entity* ent2 = rock_block_new(vector2d(300, 400));
 
-    level = level_load("rooms/blockRoom.json");
+    level = level_load("rooms/shop.json");
     level_set_active_level(level);
 
     //SPAWN PLAYER AT 600, 555
@@ -78,6 +79,7 @@ int main(int argc, char * argv[])
     level_add_entity(level, player_get());
     //level_add_entity(level, ent);
     //level_add_entity(level, ent2);
+    shop_item_new(vector2d(450, 250), 1, 20);
 
     List* collisions = gfc_list_new();
 

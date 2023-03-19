@@ -54,6 +54,8 @@ void rock_block_draw(Entity* self) {
     gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
 }
 
+//FOR SOME REASON blockRoom.json is NOT REALLY WORKING - idk if its cuz of here
+//two of the blocks in the middle and right dont hit player/no collision
 void rock_block_think(Entity* self)
 {
     Vector2D m, dir;

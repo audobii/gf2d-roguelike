@@ -58,6 +58,7 @@ void player_deactivate_ability();
 
 Uint8 player_get_ability();
 
+void player_set_ability(Entity* self, Uint8 ability);
 /**
  * @return true if player ability is active; false if otherwise
  */
