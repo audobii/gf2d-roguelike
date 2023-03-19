@@ -79,7 +79,9 @@ int main(int argc, char * argv[])
     level_add_entity(level, player_get());
     //level_add_entity(level, ent);
     //level_add_entity(level, ent2);
-    shop_item_new(vector2d(450, 250), 1, 20);
+    shop_item_new(vector2d(400, 300), 2);
+    shop_item_new(vector2d(600, 300), 6);
+    shop_item_new(vector2d(800, 300), 3);
 
     List* collisions = gfc_list_new();
 

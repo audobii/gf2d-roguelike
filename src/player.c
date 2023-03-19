@@ -97,7 +97,7 @@ Entity* player_new(Vector2D position) {
 		data->mana = 350;
         data->currentAbility = 5;
         data->abilityActive = false;
-        data->money = 0;
+        data->money = 40;
 		ent->data = data;
 	}
 

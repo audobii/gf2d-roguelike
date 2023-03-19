@@ -11,10 +11,17 @@ void shop_item_draw(Entity* self);
 
 //TODO: maybe consolidate this into pickup class?
 
+typedef struct {
+    int price;
+    int itemType;
+}ShopItemData;
+
 //1=triple; 2=heal; 3=self destruct; 4=rage; 5=poison; 6=heart; 7=mana;
-Entity* shop_item_new(Vector2D position, int type, int cost)
+Entity* shop_item_new(Vector2D position, int type)
 {
     Entity* ent;
+    ShopItemData* data;
+
     ent = entity_new();
     if (!ent)return NULL;
 
@@ -57,7 +64,13 @@ Entity* shop_item_new(Vector2D position, int type, int cost)
 
     vector2d_copy(ent->position, position);
 
-    ent->drawOffset = vector2d(28, 32);
+    if (type <= 5) {
+        ent->drawOffset = vector2d(28, 32);
+    }
+    else {
+        ent->drawOffset = vector2d(16, 16);
+    }
+    
     ent->speed = 0;
 
     //body/collision stuff
@@ -66,11 +79,24 @@ Entity* shop_item_new(Vector2D position, int type, int cost)
     ent->body.team = 0;
     vector2d_copy(ent->body.position, position);
 
+    data = gfc_allocate_array(sizeof(ShopItemData), 1);
+    if (data) {
+        if (type <= 5) {
+            data->price = 20;
+        } if (type > 5) {
+            data->price = 5;
+        }
+
+        data->itemType = type;
+        ent->data = data;
+    }
+
     //gfc_line_cpy(ent->name, "shop_item");
     return ent;
 }
 
 void shop_item_draw(Entity* self) {
+    Sprite* price;
     if (!self)return;
     gf2d_sprite_draw(
         self->sprite,
@@ -85,7 +111,13 @@ void shop_item_draw(Entity* self) {
     //gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
     //gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
 
-    Sprite* price = gf2d_sprite_load_image("images/temp_price.png");
+    if (shop_item_get_type(self) <= 5) {
+        price = gf2d_sprite_load_image("images/temp_price.png");
+    }
+    else {
+        price = gf2d_sprite_load_image("images/temp_price_5.png");
+    }
+    
     gf2d_sprite_draw_image(price, vector2d(self->position.x - 20, self->position.y + 20));
 }
 
@@ -106,8 +138,9 @@ void shop_item_think(Entity* self)
     if (!collision)return;
 
     p_current_money = player_get_money();
+    price = shop_item_get_price(self);
     
-    if (p_current_money - 20 >= 0) {
+    if (p_current_money - price >= 0) {
         if (!gfc_line_cmp(self->name, "heart")) {
             player->health += 20;
         }
@@ -138,6 +171,24 @@ void shop_item_think(Entity* self)
         return;
     }
     
+}
+
+int shop_item_get_price(Entity* item) {
+    ShopItemData* sdata;
+
+    sdata = item->data;
+
+    if (!sdata)return;
+    return sdata->price;
+}
+
+int shop_item_get_type(Entity* item) {
+    ShopItemData* sdata;
+
+    sdata = item->data;
+
+    if (!sdata)return;
+    return sdata->itemType;
 }
 
 /*eol@eof*/

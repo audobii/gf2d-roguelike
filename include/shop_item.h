@@ -10,7 +10,8 @@
  * @param type type of item to spawn (1=triple; 2=heal; 3=self destruct; 4=rage; 5=poison; 6=heart; 7=mana;)
  * @return NULL on failure, or a pointer to the new item
  */
-Entity* shop_item_new(Vector2D position, int type, int cost);
+Entity* shop_item_new(Vector2D position, int type);
 
+int shop_item_get_price(Entity* self);
 
 #endif
