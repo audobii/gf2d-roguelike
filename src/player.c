@@ -220,6 +220,12 @@ void player_think(Entity* self) {
         slog(str);
     }
 
+    if (gfc_input_key_down("p")) {
+        char str[20];
+        sprintf(str, "%f", player_get_position().y);
+        slog(str);
+    }
+
     if ((walk.x) || (walk.y))
     {
         vector2d_normalize(&walk);

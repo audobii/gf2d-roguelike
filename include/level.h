@@ -26,6 +26,8 @@ typedef struct
     List* staticShapes;      //list of static shapes to clip against in the game world
     List* activeEntities;
     List* activeBodies;
+    List* enemiesToSpawn;
+    List* enemiesToSpawn_Coords; //array of arrays [xpos, ypos]; one-to-one with enemies to spawn
 }Level;
 
 /**

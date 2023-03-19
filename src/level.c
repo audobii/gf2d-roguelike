@@ -10,7 +10,10 @@
 #include "entity.h"
 #include "body.h"
 
+#include "entity_common.h"
+
 void level_build(Level* level);
+void level_spawn_enemies(Level* level);
 
 static Level* activeLevel = NULL;
 
@@ -26,10 +29,13 @@ Level* level_load(const char* filename) {
     int tile;
     int i, c;
     int j, d;
+    int a, b;
+    int x = 0, y = 0;
     int tileFPL;
     const char* str;
-    SJson* json, * lj, * list, * row, * item;
+    SJson* json, * lj, * list, * list2, * row, * row2, * item;
     Level* level;
+    List* coords;
 
     if (!filename)return NULL;
 
@@ -71,6 +77,37 @@ Level* level_load(const char* filename) {
     if (str)
     {
         level->tileSetAlt = gf2d_sprite_load_all(str, (Sint32)level->tileSize.x, (Sint32)level->tileSize.y, tileFPL, 1);
+    }
+
+    //load in list of enemies to spawn eventually
+    //start list
+    //iterate through json list
+    //entity_spawn_by_name() for each thing in level_spawn_enemies
+    list = sj_object_get_value(lj, "enemy_list");
+    list2 = sj_object_get_value(lj, "enemy_coords");
+    if (list && list2) {
+        c = sj_array_get_count(list); //total enemies in level
+        
+        for (int i = 0; i < c; i++) {
+            coords = gfc_list_new();
+            row = sj_array_get_nth(list, i); //the row/enemy
+            row2 = sj_array_get_nth(list2, i); //the coords
+
+            const char* enemy_name = sj_get_string_value(row);
+            //slog(enemy_name);
+            a = sj_array_get_nth(row2, 0); //enemy pos x 
+            b = sj_array_get_nth(row2, 1); //enemy pos y
+
+            sj_get_integer_value(a, &x);
+            sj_get_integer_value(b, &y);
+
+            char str[20];
+            sprintf(str, "%i", x);
+            slog(str);
+
+            gfc_list_append(level->enemiesToSpawn, entity_spawn_by_name(enemy_name, vector2d(x,y)));
+        }
+
     }
 
     list = sj_object_get_value(lj, "tileMap");
@@ -221,6 +258,25 @@ void level_build_static_collision_layer(Level* level) {
             level->staticShapes = gfc_list_append(level->staticShapes, (void*)newShape);
         }
     }
+
+    level_spawn_enemies(level);
+}
+
+void level_spawn_enemies(Level* level) {
+    List* enemies;
+    List* enemy_coords;
+    int x, y;
+    Entity* new_enemy;
+    List* coords;
+    slog("hii");
+    enemies = level->enemiesToSpawn;
+
+    if (gfc_list_get_count(enemies) <= 0) return;
+
+    for (int i = 0; i < gfc_list_get_count(enemies); i++) {
+
+        level_add_entity(level, gfc_list_get_nth(enemies, i));
+    }
 }
 
 void level_draw_static_shapes(Level* level) {
@@ -263,6 +319,9 @@ Level* level_new() {
 	level->staticShapes = gfc_list_new();
     level->activeEntities = gfc_list_new();
     level->activeBodies = gfc_list_new();
+    level->enemiesToSpawn = gfc_list_new();
+    level->enemiesToSpawn_Coords = gfc_list_new();
+
 	return level;
 }
 

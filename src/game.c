@@ -64,17 +64,18 @@ int main(int argc, char * argv[])
     //game window is 1200x720
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
-    ent = crystal_guy_new(vector2d(350,250));
+    //ent = crystal_guy_new(vector2d(800,250));
 
-    level = level_load("rooms/startRoom.json");
+    level = level_load("rooms/enemyRoom1.json");
     level_set_active_level(level);
 
-    player_new(vector2d(500, 500));
+    //SPAWN PLAYER AT 600, 555
+    player_new(vector2d(600, 555));
 
     //TEMPORARY 
     //TODO: please add level_add_entity to every _new function for enemies and player
     level_add_entity(level, player_get());
-    level_add_entity(level, ent);
+    //level_add_entity(level, ent);
 
     List* collisions = gfc_list_new();
 
