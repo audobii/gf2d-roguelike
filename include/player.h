@@ -39,13 +39,13 @@ void player_set_mana(Uint32 newMana);
  * @brief get player's current money amount
  * @return the player's money
  */
-Uint32 player_get_money();
+int player_get_money();
 
 /**
  * @brief set player's money amount
  * @param newMoney the new value to set player's money to
  */
-void player_set_money(Uint32 newMoney);
+void player_set_money(int newMoney);
 
 /**
  * @brief draw player's HUD

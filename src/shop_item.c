@@ -20,31 +20,31 @@ Entity* shop_item_new(Vector2D position, int type, int cost)
 
     switch (type) {
     case 1:
-        ent->sprite = gf2d_sprite_load_image("images/triple_shot_ability.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_triple_shot_ability.png");
         gfc_line_cpy(ent->name, "ab_triple");
         break;
     case 2:
-        ent->sprite = gf2d_sprite_load_image("images/heal_ability.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_heal_ability.png");
         gfc_line_cpy(ent->name, "ab_heal");
         break;
     case 3:
-        ent->sprite = gf2d_sprite_load_image("images/self_destruct_ability.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_self_destruct_ability.png");
         gfc_line_cpy(ent->name, "ab_destruct");
         break;
     case 4:
-        ent->sprite = gf2d_sprite_load_image("images/rage_mode_ability.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_rage_mode_ability.png");
         gfc_line_cpy(ent->name, "ab_rage");
         break;
     case 5:
-        ent->sprite = gf2d_sprite_load_image("images/poison_dart_ability.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_poison_dart_ability.png");
         gfc_line_cpy(ent->name, "ab_poison");
         break;
     case 6:
-        ent->sprite = gf2d_sprite_load_image("images/heart.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_heart.png");
         gfc_line_cpy(ent->name, "heart");
         break;
     case 7:
-        ent->sprite = gf2d_sprite_load_image("images/mana_drop.png");
+        ent->sprite = gf2d_sprite_load_image("images/shop_mana_drop.png");
         gfc_line_cpy(ent->name, "mana");
         break;
     default:
@@ -57,11 +57,11 @@ Entity* shop_item_new(Vector2D position, int type, int cost)
 
     vector2d_copy(ent->position, position);
 
-    ent->drawOffset = vector2d(16, 16);
+    ent->drawOffset = vector2d(28, 32);
     ent->speed = 0;
 
     //body/collision stuff
-    ent->shape = gfc_shape_circle(0, 0, 8);
+    ent->shape = gfc_shape_circle(0, 0, 22);
     ent->body.shape = &ent->shape;
     ent->body.team = 0;
     vector2d_copy(ent->body.position, position);
@@ -82,11 +82,11 @@ void shop_item_draw(Entity* self) {
         NULL,
         0);
 
-    gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
-    gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
+    //gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
+    //gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
 
     Sprite* price = gf2d_sprite_load_image("images/temp_price.png");
-    gf2d_sprite_draw_image(price, vector2d(self->position.x, self->position.y + 100));
+    gf2d_sprite_draw_image(price, vector2d(self->position.x - 20, self->position.y + 20));
 }
 
 void shop_item_think(Entity* self)
@@ -95,7 +95,8 @@ void shop_item_think(Entity* self)
     List* activeEnts;
     Entity* player;
     Collision* collision;
-    Uint32 p_current_money;
+    int p_current_money;
+    int price;
 
     player = player_get();
 
@@ -105,7 +106,7 @@ void shop_item_think(Entity* self)
     if (!collision)return;
 
     p_current_money = player_get_money();
-
+    
     if (p_current_money - 20 >= 0) {
         if (!gfc_line_cmp(self->name, "heart")) {
             player->health += 20;

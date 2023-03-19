@@ -26,7 +26,7 @@ typedef struct {
 	Uint32 mana;
     Uint8 currentAbility; //-1 if none; 1/2/3/4/5 for each ability
     Bool abilityActive;
-    Uint32 money;
+    int money;
 }PlayerData;
 
 Entity* player_get() {
@@ -49,7 +49,7 @@ void player_set_mana(Uint32 newMana) {
     pdata->mana = newMana;
 }
 
-Uint32 player_get_money() {
+int player_get_money() {
     PlayerData* pdata;
 
     pdata = ThePlayer->data;
