@@ -373,13 +373,15 @@ void level_free(Level* level) {
     if (level->tileSetAlt)gf2d_sprite_free(level->tileSetAlt);
 	if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
 	if (level->tileMap)free(level->tileMap);
-	gfc_list_foreach(level->staticShapes, free);
-	gfc_list_delete(level->staticShapes);
+    if (level->staticShapes) {
+        gfc_list_foreach(level->staticShapes, free);
+        gfc_list_delete(level->staticShapes);
+    }
     //gfc_list_foreach(level->activeBodies, free);
-    gfc_list_delete(level->activeBodies);
+    if (level->activeBodies)gfc_list_delete(level->activeBodies);
     //gfc_list_foreach(level->activeEntities, free);
-    gfc_list_delete(level->activeEntities);
-    gfc_list_delete(level->enemiesToSpawn);
+    if (level->activeEntities)gfc_list_delete(level->activeEntities);
+    if (level->enemiesToSpawn)gfc_list_delete(level->enemiesToSpawn);
 	free(level);
 }
 

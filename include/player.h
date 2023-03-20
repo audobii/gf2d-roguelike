@@ -24,6 +24,12 @@ Entity* player_get();
 Vector2D player_get_position();
 
 /**
+ * @brief set the player's position;
+ * @param newPos the new position to set player to
+ */
+void player_set_position(Vector2D newPos);
+
+/**
  * @brief get player's current mana value
  * @return the player's mana
  */

@@ -70,6 +70,11 @@ Vector2D player_get_position() {
     return ThePlayer->position;
 }
 
+void player_set_position(Vector2D newPos) {
+    if (ThePlayer == NULL)return;
+    ThePlayer->position = newPos;
+}
+
 Entity* player_new(Vector2D position) {
 	PlayerData* data;
 	Entity* ent;
@@ -95,7 +100,7 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 3;
+        data->currentAbility = 1;
         data->abilityActive = false;
         data->money = 40;
 		ent->data = data;
@@ -243,6 +248,8 @@ void player_think(Entity* self) {
     }
 
     //internal timer is a temporary fix to input_key_pressed not working...
+    //but also might be breaking something? when doing something (usually a free?) while under timer > 0, seg fault...
+    //MAYBE FIX with global timer for every entity??
     internal_timer += 0.1;
     
     if (data->abilityActive) {
