@@ -72,6 +72,15 @@ void cave_hole_think(Entity* self)
 
     old_level = level_get_active_level();
     if (!old_level)return;
+
+    //get rid of old entities - maybe put this in a function?
+    for (int i = 0; i < gfc_list_get_count(old_level->enemiesToSpawn);i++) {
+        entity_clear_from_level(gfc_list_get_nth(old_level->enemiesToSpawn, i));
+        entity_free(gfc_list_get_nth(old_level->enemiesToSpawn, i));
+    }
+
+    //do a similar thing as above^ to entities such as shop and drops
+
     level_free(old_level);
 
     int rand_num = rand() % 5;
@@ -111,7 +120,7 @@ void cave_hole_think(Entity* self)
     //level_free(old_level); //this breaks it... but i want to free the old level? or do i have to
     //entity_clear_from_level(self);
     entity_free(self);
-    //cave_hole_new(vector2d(600, 200));
+    cave_hole_new(vector2d(600, 200));
 }
 
 /*eol@eof*/
