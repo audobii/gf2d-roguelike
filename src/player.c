@@ -188,13 +188,6 @@ void player_think(Entity* self) {
 
     if (!self)return;
 
-    //maybe causing seg fault
-    if (self->health <= 0 && ThePlayer != NULL) {
-        player_game_over(self);
-        entity_clear_from_level(self);
-        entity_free(self);
-    }
-
     data = ThePlayer->data;
 
     SDL_GetMouseState(&mx, &my);
@@ -321,6 +314,13 @@ void player_think(Entity* self) {
     if (ability_timer > 16.0) { //cooldown sorta
         player_deactivate_ability();
         ability_timer = 0;
+    }
+
+    //maybe causing seg fault
+    if (self->health <= 0 && ThePlayer != NULL) {
+        player_game_over(self);
+        entity_clear_from_level(self);
+        entity_free(self);
     }
 }
 

@@ -374,6 +374,7 @@ void level_free(Level* level) {
 	if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
 	if (level->tileMap)free(level->tileMap);
     if (level->staticShapes) {
+        slog("delete");
         gfc_list_foreach(level->staticShapes, free);
         gfc_list_delete(level->staticShapes);
     }

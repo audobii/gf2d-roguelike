@@ -72,6 +72,7 @@ void cave_hole_think(Entity* self)
 
     old_level = level_get_active_level();
     if (!old_level)return;
+    level_free(old_level);
 
     int rand_num = rand() % 5;
 
