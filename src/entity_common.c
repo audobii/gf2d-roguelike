@@ -48,9 +48,9 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
             level_add_entity(level_get_active_level(), slime_new(offset_pos));
         }
         else if (!gfc_line_cmp(self->name, "player")) { //if player dies handle it differently?
+            slog("in entity_common.c");
             player_game_over(self);
         }
-
         entity_clear_from_level(self);
         if (gfc_line_cmp(self->name, "player")) {
             player_score_inc(10);

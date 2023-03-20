@@ -79,7 +79,7 @@ void glowfly_think(Entity* self)
 
     if (self->health <= 0)
     {
-        slog("died...");
+        //slog("died...");
         entity_clear_from_level(self);
         entity_drop_loot(self);
         entity_free(self);

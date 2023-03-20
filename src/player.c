@@ -338,11 +338,14 @@ void player_think(Entity* self) {
     }
 
     //maybe causing seg fault
+    
     if (self->health <= 0 && ThePlayer != NULL) {
+        slog("in player.c");
         player_game_over(self);
         entity_clear_from_level(self);
         entity_free(self);
     }
+    
 }
 
 void player_draw(Entity* self) {
@@ -519,13 +522,16 @@ void player_game_over(Entity* self) {
     }
     
     sj_free(json);
-    sj_free(new_json);
-    sj_free(new_scores);
+    //COMMENTING THIS OUT FIXED SEG FAULTS? idk
+    //sj_free(new_json);
+    //sj_free(new_scores);
+    slog("about 2 free player");
     player_free(self);
 }
 
 void player_free(Entity* self)
 {
-	if (!self)return;
+    slog("freeing player");
+	//if (!self)return;
 	ThePlayer = NULL;
 }
