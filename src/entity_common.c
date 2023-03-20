@@ -50,8 +50,12 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
         else if (!gfc_line_cmp(self->name, "player")) { //if player dies handle it differently?
             player_game_over(self);
         }
+
         entity_clear_from_level(self);
-        if (gfc_line_cmp(self->name, "player"))entity_drop_loot(self);
+        if (gfc_line_cmp(self->name, "player")) {
+            player_score_inc(10);
+            entity_drop_loot(self);
+        }
         entity_free(self);
     }
 }

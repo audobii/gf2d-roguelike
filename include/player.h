@@ -54,6 +54,17 @@ int player_get_money();
 void player_set_money(int newMoney);
 
 /**
+ * @brief increase player's room score by one
+ */
+void player_room_inc();
+
+/**
+ * @brief increase player's score
+ * @param points how much to increase score by
+ */
+void player_score_inc(int points);
+
+/**
  * @brief draw player's HUD
  */
 void player_draw_hud(Entity* self);

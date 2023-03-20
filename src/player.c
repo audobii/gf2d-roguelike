@@ -37,7 +37,7 @@ Entity* player_get() {
 
 Uint32 player_get_mana() {
     PlayerData* pdata;
-
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     return pdata->mana;
@@ -45,7 +45,7 @@ Uint32 player_get_mana() {
 
 void player_set_mana(Uint32 newMana) {
     PlayerData* pdata;
-
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     pdata->mana = newMana;
@@ -53,7 +53,7 @@ void player_set_mana(Uint32 newMana) {
 
 int player_get_money() {
     PlayerData* pdata;
-
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     return pdata->money;
@@ -61,7 +61,7 @@ int player_get_money() {
 
 void player_set_money(int newMoney) {
     PlayerData* pdata;
-
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     pdata->money = newMoney;
@@ -76,6 +76,22 @@ void player_set_position(Vector2D newPos) {
     if (ThePlayer == NULL)return;
     vector2d_copy(ThePlayer->position, newPos);
     vector2d_copy(ThePlayer->body.position, newPos);
+}
+
+void player_room_inc() {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    pdata->room_score += 1;
+}
+
+void player_score_inc(int points) {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    pdata->score += points;
 }
 
 Entity* player_new(Vector2D position) {
@@ -408,6 +424,7 @@ void player_draw_hud(Entity* self) {
 
 void player_set_ability(Entity* self, int ability) {
     PlayerData* pdata;
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     pdata->currentAbility = ability;
@@ -415,6 +432,7 @@ void player_set_ability(Entity* self, int ability) {
 
 int player_get_ability() {
     PlayerData* pdata;
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     return pdata->currentAbility;
@@ -422,6 +440,7 @@ int player_get_ability() {
 
 void player_activate_ability() {
     PlayerData* pdata;
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     if (pdata->abilityActive)return;
@@ -432,6 +451,7 @@ void player_activate_ability() {
 
 void player_deactivate_ability() {
     PlayerData* pdata;
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     pdata->abilityActive = false;
@@ -439,6 +459,7 @@ void player_deactivate_ability() {
 
 Bool player_ability_is_active() {
     PlayerData* pdata;
+    if (ThePlayer == NULL)return;
     pdata = ThePlayer->data;
 
     return pdata->abilityActive;
@@ -446,18 +467,20 @@ Bool player_ability_is_active() {
 
 void player_game_over(Entity* self) {
     SJson* json, *new_json, *new_scores, *obj, *old_high_score, *old_highest_rooms;
+    PlayerData* pdata;
+    int old_rooms=0, old_score=0;
 
     if (!self)return;
 
     slog("game over...");
 
     //load scores into high score json
-    //write to new json if scores >
+    //write to new json if scores>previous; if not, dont do anything
     //and then save as high_score.json?
     json = sj_load("config/high_score.json");
     if (!json)slog("could not read high score list");
 
-    obj = sj_object_get_value(json, "current_high_score");
+    obj = sj_object_get_value(json, "current_high_scores");
 
     if (!obj)
     {
@@ -468,18 +491,36 @@ void player_game_over(Entity* self) {
     old_high_score = sj_object_get_value(obj, "high_score");
     old_highest_rooms = sj_object_get_value(obj, "highest_rooms");
 
+    sj_get_integer_value(old_high_score, old_score);
+    sj_get_integer_value(old_highest_rooms, old_rooms);
+
     new_scores = sj_object_new();
     new_json = sj_object_new();
 
+    pdata = ThePlayer->data;
+    /*
     //TESTING PURPOSES
     sj_object_insert(new_scores, "player_name", sj_new_str("test_player"));
     sj_object_insert(new_scores, "highest_rooms", sj_new_int(4));
     sj_object_insert(new_scores, "high_score", sj_new_int(20));
+    */
 
-    sj_object_insert(new_json, "current_high_scores", new_scores);
+    char str[40];
+    sprintf(str, "room score: %i // score: %i", pdata->room_score, pdata->score);
+    slog(str);
 
-    sj_save(new_json, "config/high_score.json");
+    if (pdata->room_score > old_rooms && pdata->score > old_score) {
+        sj_object_insert(new_scores, "player_name", sj_new_str(ThePlayer->name));
+        sj_object_insert(new_scores, "highest_rooms", sj_new_int(pdata->room_score));
+        sj_object_insert(new_scores, "high_score", sj_new_int(pdata->score));
 
+        sj_object_insert(new_json, "current_high_scores", new_scores);
+        sj_save(new_json, "config/high_score.json");
+    }
+    
+    sj_free(json);
+    sj_free(new_json);
+    sj_free(new_scores);
     player_free(self);
 }
 

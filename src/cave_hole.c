@@ -113,12 +113,13 @@ void cave_hole_think(Entity* self)
     }
     */
     
-    slog("here");
+    //slog("here");
     level = level_load(rooms[rand_num]);
     level_set_active_level(level);
    
     level_add_entity(level, player_get());
-    player_set_position(vector2d(600, 555)); //this doesnt work
+    player_set_position(vector2d(600, 555));
+    player_room_inc();
     
     //level_free(old_level); //this breaks it... but i want to free the old level? or do i have to
     //entity_clear_from_level(self);
