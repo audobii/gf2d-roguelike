@@ -39,6 +39,7 @@ Level* level_load(const char* filename) {
     SJson* json, * lj, * list, * list2, * row, * row2, * item;
     Level* level;
     List* coords;
+    Entity* temp_ent;
 
     if (!filename)return NULL;
 
@@ -133,7 +134,8 @@ Level* level_load(const char* filename) {
             sj_get_integer_value(a, &x);
             sj_get_integer_value(b, &y);
 
-            shop_item_new(vector2d(x, y), t);
+            temp_ent = shop_item_new(vector2d(x, y), t);
+            gfc_list_append(level->existing_entities, temp_ent);
         }
     }
 
@@ -156,7 +158,8 @@ Level* level_load(const char* filename) {
             sj_get_integer_value(a, &x);
             sj_get_integer_value(b, &y);
 
-            pickup_new(vector2d(x, y), t);
+            temp_ent = pickup_new(vector2d(x, y), t);
+            gfc_list_append(level->existing_entities, temp_ent);
         }
     }
 
@@ -378,6 +381,7 @@ Level* level_new() {
     level->activeEntities = gfc_list_new();
     level->activeBodies = gfc_list_new();
     level->enemiesToSpawn = gfc_list_new();
+    level->existing_entities = gfc_list_new();
 
     level->cleared = false;
 
@@ -399,6 +403,7 @@ void level_free(Level* level) {
     //gfc_list_foreach(level->activeEntities, free);
     if (level->activeEntities)gfc_list_delete(level->activeEntities);
     if (level->enemiesToSpawn)gfc_list_delete(level->enemiesToSpawn);
+    if (level->existing_entities)gfc_list_delete(level->existing_entities);
 	free(level);
 }
 

@@ -17,7 +17,7 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
 {
     if (!self)return;
     if (self->health < 0)return;// lets not beat a dead horse
-    slog("hit");
+    //slog("hit");
 
     //printing damage variable... its 0.00000
     //char str[20];

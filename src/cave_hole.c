@@ -80,6 +80,9 @@ void cave_hole_think(Entity* self)
     }
 
     //do a similar thing as above^ to entities such as shop and drops
+    for (int i = 0; i < gfc_list_get_count(old_level->existing_entities); i++) {
+        entity_free(gfc_list_get_nth(old_level->existing_entities, i));
+    }
 
     level_free(old_level);
 

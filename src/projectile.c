@@ -79,6 +79,7 @@ void projectile_update(Entity* self) {
     Entity* other;
     Collision* collision;
 
+    if (!self)return;
     activeEnts = level_get_active_level()->activeEntities;
 
     if (!activeEnts)return;
