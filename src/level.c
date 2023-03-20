@@ -42,6 +42,8 @@ Level* level_load(const char* filename) {
 
     if (!filename)return NULL;
 
+    slog("loading lvl");
+
     //load in data from json file
     json = sj_load(filename);
     if (!json)return NULL;
@@ -203,6 +205,9 @@ Level* level_load(const char* filename) {
 void level_build(Level* level) {
     int i, j;
     if (!level)return;
+
+    slog("building lvl");
+
     if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
     level->tileLayer = gf2d_sprite_new();
     if (!level->tileLayer)
@@ -287,6 +292,8 @@ void level_build_static_collision_layer(Level* level) {
     int i, j;
     if ((!level) || (!level->tileLayer))return;
 
+    slog("building collision lvl");
+
     for (j = 0; j < level->mapSize.y; j++)//j is row
     {
         for (i = 0; i < level->mapSize.x; i++)// i is column
@@ -313,6 +320,8 @@ void level_build_static_collision_layer(Level* level) {
 void level_spawn_enemies(Level* level) {
     List* enemies;
 
+    if (!level)return;
+
     enemies = level->enemiesToSpawn;
 
     if (gfc_list_get_count(enemies) <= 0) return;
@@ -325,6 +334,8 @@ void level_spawn_enemies(Level* level) {
 void level_draw_static_shapes(Level* level) {
     Shape* s;
 
+    if (!level)return;
+
     for (int i = 0; i < level->staticShapes->count; i++) {
         s = gfc_list_get_nth(level->staticShapes, i);
         gf2d_draw_shape(*s, GFC_COLOR_YELLOW, vector2d(0, 0));
@@ -334,6 +345,8 @@ void level_draw_static_shapes(Level* level) {
 void level_draw_active_entities_bodies(Level* level) {
     Entity* ent;
 
+    if (!level)return;
+
     for (int i = 0; i < level->activeEntities->count; i++) {
         ent = gfc_list_get_nth(level->activeEntities, i);
         body_draw(&ent->body, vector2d(0, 0));
@@ -341,11 +354,13 @@ void level_draw_active_entities_bodies(Level* level) {
 }
 
 void level_add_entity(Level* level, Entity* entity) {
+    if (!level || !entity)return;
     level->activeEntities = gfc_list_append(level->activeEntities, entity);
     level->activeBodies = gfc_list_append(level->activeBodies, &entity->body);
 }
 
 List* level_get_active_bodies(Level* level) {
+    if (!level)return;
     return level->activeEntities;
 }
 
@@ -364,6 +379,8 @@ Level* level_new() {
     level->activeBodies = gfc_list_new();
     level->enemiesToSpawn = gfc_list_new();
 
+    level->cleared = false;
+
 	return level;
 }
 
@@ -374,7 +391,6 @@ void level_free(Level* level) {
 	if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
 	if (level->tileMap)free(level->tileMap);
     if (level->staticShapes) {
-        slog("delete");
         gfc_list_foreach(level->staticShapes, free);
         gfc_list_delete(level->staticShapes);
     }
@@ -386,4 +402,10 @@ void level_free(Level* level) {
 	free(level);
 }
 
+void level_clear_static_shapes(Level* level) {
+    if (level->staticShapes) {
+        gfc_list_foreach(level->staticShapes, free);
+        gfc_list_delete(level->staticShapes);
+    }
+}
 

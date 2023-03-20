@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
     //ent = rock_block_new(vector2d(800,250));
     //Entity* ent2 = rock_block_new(vector2d(300, 400));
 
-    level = level_load("rooms/mazeRoom.json");
+    level = level_load("rooms/startRoom.json");
     level_set_active_level(level);
 
     //SPAWN PLAYER AT 600, 555
@@ -100,7 +100,7 @@ int main(int argc, char * argv[])
         entity_think_all();
         entity_update_all();
 
-        gf2d_collision_build_list(collisions, level->staticShapes, level->activeBodies);
+        gf2d_collision_build_list(collisions, level_get_active_level()->staticShapes, level_get_active_level()->activeBodies); 
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
@@ -110,7 +110,7 @@ int main(int argc, char * argv[])
 
             entity_draw_all();
             
-            level_draw_static_shapes(level);
+            level_draw_static_shapes(level_get_active_level());
 
             //UI elements last
             gf2d_sprite_draw(
@@ -133,7 +133,7 @@ int main(int argc, char * argv[])
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     entity_free_all();
-    level_free(level);
+    level_free(level_get_active_level());
     slog("---==== END ====---");
     return 0;
 }

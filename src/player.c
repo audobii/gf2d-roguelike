@@ -72,7 +72,8 @@ Vector2D player_get_position() {
 
 void player_set_position(Vector2D newPos) {
     if (ThePlayer == NULL)return;
-    ThePlayer->position = newPos;
+    vector2d_copy(ThePlayer->position, newPos);
+    vector2d_copy(ThePlayer->body.position, newPos);
 }
 
 Entity* player_new(Vector2D position) {

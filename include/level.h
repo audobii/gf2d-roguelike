@@ -27,7 +27,8 @@ typedef struct
     List* activeEntities;
     List* activeBodies;
     List* enemiesToSpawn;
-    Bool cleared;
+    List* existing_entities; // the other entities that exist in the level
+    Bool cleared; //set to true if enemies is empty maybe
 }Level;
 
 /**
@@ -101,5 +102,7 @@ void level_add_entity(Level* level, Entity* entity);
  * @return list of active bodies for given level
  */
 List* level_get_active_bodies(Level* level);
+
+void level_clear_static_shapes(Level* level);
 
 #endif

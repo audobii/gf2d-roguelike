@@ -85,7 +85,6 @@ void pickup_think(Entity* self)
     p_mana = player_get_mana();
 
     if (!collision)return;
-
     if (!gfc_line_cmp(self->name, "heart")) {
         if (player->health < 330) {
             player->health += 20;
