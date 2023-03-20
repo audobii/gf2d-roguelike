@@ -68,7 +68,7 @@ int main(int argc, char * argv[])
     //ent = rock_block_new(vector2d(800,250));
     //Entity* ent2 = rock_block_new(vector2d(300, 400));
 
-    level = level_load("rooms/shop.json");
+    level = level_load("rooms/fliesncoins.json");
     level_set_active_level(level);
 
     //SPAWN PLAYER AT 600, 555

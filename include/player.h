@@ -50,15 +50,15 @@ void player_set_money(int newMoney);
 /**
  * @brief draw player's HUD
  */
-void player_draw_hud();
+void player_draw_hud(Entity* self);
 
 void player_activate_ability();
 
 void player_deactivate_ability();
 
-Uint8 player_get_ability();
+int player_get_ability();
 
-void player_set_ability(Entity* self, Uint8 ability);
+void player_set_ability(Entity* self, int ability);
 /**
  * @return true if player ability is active; false if otherwise
  */

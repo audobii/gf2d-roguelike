@@ -12,6 +12,7 @@
 
 #include "entity_common.h"
 #include "shop_item.h"
+#include "pickup.h"
 
 void level_build(Level* level);
 void level_spawn_enemies(Level* level);
@@ -111,9 +112,9 @@ Level* level_load(const char* filename) {
         }
     }
 
-    //spawn in entities for level similar to spawning enemies
-    list = sj_object_get_value(lj, "entity_list");
-    list2 = sj_object_get_value(lj, "entity_coords");
+    //spawn in shop items for level similar to spawning enemies
+    list = sj_object_get_value(lj, "shop_list");
+    list2 = sj_object_get_value(lj, "shop_coords");
     if (list && list2) {
         c = sj_array_get_count(list); //total entities in level
 
@@ -131,6 +132,29 @@ Level* level_load(const char* filename) {
             sj_get_integer_value(b, &y);
 
             shop_item_new(vector2d(x, y), t);
+        }
+    }
+
+    //spawn in pickup items for level similar to spawning enemies
+    list = sj_object_get_value(lj, "pickup_list");
+    list2 = sj_object_get_value(lj, "pickup_coords");
+    if (list && list2) {
+        c = sj_array_get_count(list); //total entities in level
+
+        for (int i = 0; i < c; i++) {
+            coords = gfc_list_new();
+            row = sj_array_get_nth(list, i); //the entity
+            row2 = sj_array_get_nth(list2, i); //the coords
+
+            //slog(enemy_name);
+            a = sj_array_get_nth(row2, 0); //enemy pos x 
+            b = sj_array_get_nth(row2, 1); //enemy pos y
+
+            sj_get_integer_value(row, &t);
+            sj_get_integer_value(a, &x);
+            sj_get_integer_value(b, &y);
+
+            pickup_new(vector2d(x, y), t);
         }
     }
 

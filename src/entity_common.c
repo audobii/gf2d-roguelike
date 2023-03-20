@@ -57,6 +57,7 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
 }
 
 void entity_clear_from_level(Entity* ent) {
+    if (!ent)return;
     gfc_list_delete_data(level_get_active_level()->activeBodies, &ent->body);
     gfc_list_delete_data(level_get_active_level()->activeEntities, ent);
 }

@@ -129,11 +129,13 @@ void shop_item_think(Entity* self)
     Collision* collision;
     int p_current_money;
     int price;
+    Uint32 p_mana;
 
     player = player_get();
 
     if (!player)return;
     collision = gf2d_collision_body_body(&self->body, &player->body);
+    p_mana = player_get_mana();
 
     if (!collision)return;
 
@@ -142,10 +144,20 @@ void shop_item_think(Entity* self)
     
     if (p_current_money - price >= 0) {
         if (!gfc_line_cmp(self->name, "heart")) {
-            player->health += 20;
+            if (player->health < 330) {
+                player->health += 20;
+            }
+            else {
+                player->health = 350;
+            }
         }
         else if (!gfc_line_cmp(self->name, "mana")) {
-            player_set_mana(player_get_mana() + 20);
+            if (p_mana < 330) {
+                player_set_mana(player_get_mana() + 20);
+            }
+            else {
+                player_set_mana(350);
+            }
         }
         else if (!gfc_line_cmp(self->name, "ab_triple")) {
             player_set_ability(player_get(), 1);

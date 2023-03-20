@@ -76,18 +76,30 @@ void pickup_think(Entity* self)
     List* activeEnts;
     Entity* player;
     Collision* collision;
+    Uint32 p_mana;
 
     player = player_get();
 
     if (!player)return;
     collision = gf2d_collision_body_body(&self->body, &player->body);
+    p_mana = player_get_mana();
 
     if (!collision)return;
 
     if (!gfc_line_cmp(self->name, "heart")) {
-        player->health += 20;
+        if (player->health < 330) {
+            player->health += 20;
+        }
+        else {
+            player->health = 350;
+        }
     }else if (!gfc_line_cmp(self->name, "mana")) {
-        player_set_mana(player_get_mana() + 20);
+        if (p_mana < 330) {
+            player_set_mana(player_get_mana() + 20);
+        }
+        else {
+            player_set_mana(350);
+        }
     }else if (!gfc_line_cmp(self->name, "money")) {
         player_set_money(player_get_money() + 1);
     }

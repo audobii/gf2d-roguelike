@@ -24,7 +24,7 @@ static float ability_timer = 0;
 
 typedef struct {
 	Uint32 mana;
-    Uint8 currentAbility; //-1 if none; 1/2/3/4/5 for each ability
+    int currentAbility; //-1 if none; 1/2/3/4/5 for each ability
     Bool abilityActive;
     int money;
 }PlayerData;
@@ -57,7 +57,7 @@ int player_get_money() {
     return pdata->money;
 }
 
-void player_set_money(Uint32 newMoney) {
+void player_set_money(int newMoney) {
     PlayerData* pdata;
 
     pdata = ThePlayer->data;
@@ -95,7 +95,7 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 5;
+        data->currentAbility = 3;
         data->abilityActive = false;
         data->money = 40;
 		ent->data = data;
@@ -142,7 +142,6 @@ void player_attack(Entity* self) {
             slog("SELF DESTRUCT");
             Vector2D temp, dir3, dir4;
             vector2d_negate(temp, dir);
-            //TODO: spawn projectiles in ring around player
             //a temporary mess
             projectile_new(self, self->body.position, dir, 5, 20.0, 20, 20);
             projectile_new(self, self->body.position, temp, 5, 20.0, 20, 20);
@@ -184,6 +183,13 @@ void player_think(Entity* self) {
 
     if (!self)return;
 
+    //maybe causing seg fault
+    if (self->health <= 0 && ThePlayer != NULL) {
+        player_game_over(self);
+        entity_clear_from_level(self);
+        entity_free(self);
+    }
+
     data = ThePlayer->data;
 
     SDL_GetMouseState(&mx, &my);
@@ -206,11 +212,6 @@ void player_think(Entity* self) {
     if (gfc_input_command_down("walkright"))
     {
         walk.x += 1;
-    }
-
-    if (gfc_input_command_down("activateAbility"))
-    {
-        player_activate_ability();
     }
 
     //TEMPORARY BC I CANT FIGURE OUT HOW TO PRINT TEXT TO SCREEN...
@@ -283,22 +284,36 @@ void player_think(Entity* self) {
         }
     }
     
+    /*
     if (gfc_input_command_down("attack") && internal_timer > 5.0 && player_get_mana() >= 10) {
         player_attack(self);
         internal_timer = 0;
-        player_set_mana(player_get_mana() - 10);
+        //player_set_mana(player_get_mana() - 10);
+    }
+
+    if (gfc_input_command_down("activateAbility") && player_get_mana() >= 25 && data->currentAbility > 0)
+    {
+        player_set_mana(player_get_mana() - 25);
+        player_activate_ability();
+    }
+    */
+
+    if (gfc_input_command_down("activateAbility") && player_get_mana() >= 25 && player_get_ability() > 0)
+    {
+        player_activate_ability();
+    }
+
+    if (internal_timer > 5.0) {
+        if (gfc_input_command_down("attack")) {
+            player_attack(self);
+        }
+
+        internal_timer = 0;
     }
 
     if (ability_timer > 16.0) { //cooldown sorta
         player_deactivate_ability();
         ability_timer = 0;
-    }
-
-    //TODO: FIX THIS- causes a seg fault for some reason
-    if (self->health <= 0) {
-        player_game_over(self);
-        entity_clear_from_level(self);
-        entity_free(self);
     }
 }
 
@@ -379,14 +394,14 @@ void player_draw_hud(Entity* self) {
     }
 }
 
-void player_set_ability(Entity* self, Uint8 ability) {
+void player_set_ability(Entity* self, int ability) {
     PlayerData* pdata;
     pdata = ThePlayer->data;
 
     pdata->currentAbility = ability;
 }
 
-Uint8 player_get_ability() {
+int player_get_ability() {
     PlayerData* pdata;
     pdata = ThePlayer->data;
 
@@ -397,6 +412,9 @@ void player_activate_ability() {
     PlayerData* pdata;
     pdata = ThePlayer->data;
 
+    if (pdata->abilityActive)return;
+
+    player_set_mana(player_get_mana() - 25);
     pdata->abilityActive = true;
 }
 
