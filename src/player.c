@@ -27,6 +27,8 @@ typedef struct {
     int currentAbility; //-1 if none; 1/2/3/4/5 for each ability
     Bool abilityActive;
     int money;
+    int room_score; //how many rooms player went through
+    int score; //for enemy killings
 }PlayerData;
 
 Entity* player_get() {
@@ -104,6 +106,8 @@ Entity* player_new(Vector2D position) {
         data->currentAbility = 3;
         data->abilityActive = false;
         data->money = 0;
+        data->room_score = 0;
+        data->score = 0;
 		ent->data = data;
 	}
 
@@ -441,9 +445,41 @@ Bool player_ability_is_active() {
 }
 
 void player_game_over(Entity* self) {
+    SJson* json, *new_json, *new_scores, *obj, *old_high_score, *old_highest_rooms;
+
     if (!self)return;
 
     slog("game over...");
+
+    //load scores into high score json
+    //write to new json if scores >
+    //and then save as high_score.json?
+    json = sj_load("config/high_score.json");
+    if (!json)slog("could not read high score list");
+
+    obj = sj_object_get_value(json, "current_high_score");
+
+    if (!obj)
+    {
+        slog("file missing current high scores object");
+        sj_free(json);
+    }
+
+    old_high_score = sj_object_get_value(obj, "high_score");
+    old_highest_rooms = sj_object_get_value(obj, "highest_rooms");
+
+    new_scores = sj_object_new();
+    new_json = sj_object_new();
+
+    //TESTING PURPOSES
+    sj_object_insert(new_scores, "player_name", sj_new_str("test_player"));
+    sj_object_insert(new_scores, "highest_rooms", sj_new_int(4));
+    sj_object_insert(new_scores, "high_score", sj_new_int(20));
+
+    sj_object_insert(new_json, "current_high_scores", new_scores);
+
+    sj_save(new_json, "config/high_score.json");
+
     player_free(self);
 }
 

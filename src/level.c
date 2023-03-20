@@ -43,7 +43,7 @@ Level* level_load(const char* filename) {
 
     if (!filename)return NULL;
 
-    slog("loading lvl");
+    //slog("loading lvl");
 
     //load in data from json file
     json = sj_load(filename);
@@ -209,7 +209,7 @@ void level_build(Level* level) {
     int i, j;
     if (!level)return;
 
-    slog("building lvl");
+    //slog("building lvl");
 
     if (level->tileLayer)gf2d_sprite_free(level->tileLayer);
     level->tileLayer = gf2d_sprite_new();
@@ -295,8 +295,8 @@ void level_build_static_collision_layer(Level* level) {
     int i, j;
     if ((!level) || (!level->tileLayer))return;
 
-    slog("building collision lvl");
-
+    //slog("building collision lvl");
+    
     for (j = 0; j < level->mapSize.y; j++)//j is row
     {
         for (i = 0; i < level->mapSize.x; i++)// i is column

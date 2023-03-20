@@ -43,8 +43,6 @@ int main(int argc, char * argv[])
     
     Level* level;
 
-    //Shape test_shape = gfc_shape_rect(100, 100, 100, 10);
-
     /*program initializtion*/
     init_logger("gf2d.log",0);
     slog("---==== BEGIN ====---");
