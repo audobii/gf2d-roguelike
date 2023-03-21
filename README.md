@@ -23,6 +23,8 @@ Common deliverables
 + README for how to play and see all game features (this should be in the git repo)
     + This
 
+<br>
+
 Personal deliverables
 + 5 rooms that are randomly chosen
     + Rooms are randomly chosen from pool of currently 7 rooms (+ 1 starting room)
