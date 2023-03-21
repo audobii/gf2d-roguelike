@@ -50,8 +50,8 @@ void rock_block_draw(Entity* self) {
         NULL,
         0);
 
-    gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
-    gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
+    //gf2d_draw_pixel(self->position, gfc_color8(255, 255, 255, 160));
+    //gf2d_draw_circle(self->position, 10, gfc_color8(255, 255, 255, 160));
 }
 
 //FOR SOME REASON blockRoom.json is NOT REALLY WORKING - idk if its cuz of here

@@ -91,12 +91,14 @@ void entity_draw(Entity* ent)
             NULL,
             (Uint32)ent->frame);
 
-
-        gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
-        gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
+        //uncomment to see hitboxes/shapes
+        // TODO: in the future make a "debug" mode to draw these
+        //gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
+        //gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
     }
-
-    body_draw(&ent->body, vector2d(0, 0));
+    //gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
+    //gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
+    //body_draw(&ent->body, vector2d(0, 0));
 }
 
 void entity_draw_all()

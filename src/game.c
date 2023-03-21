@@ -108,7 +108,7 @@ int main(int argc, char * argv[])
 
             entity_draw_all();
             
-            level_draw_static_shapes(level_get_active_level());
+            //level_draw_static_shapes(level_get_active_level());
 
             //UI elements last
             gf2d_sprite_draw(
