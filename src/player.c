@@ -119,7 +119,7 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 4;
+        data->currentAbility = -1;
         data->abilityActive = false;
         data->money = 20;
         data->room_score = 0;

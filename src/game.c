@@ -60,13 +60,11 @@ int main(int argc, char * argv[])
     SDL_ShowCursor(SDL_DISABLE);
 
     gfc_input_init("config/input.json");
-    
+
     /*demo setup*/
     //game window is 1200x720
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
-    //ent = rock_block_new(vector2d(800,250));
-    //Entity* ent2 = rock_block_new(vector2d(300, 400));
 
     level = level_load("rooms/startRoom.json");
     level_set_active_level(level);
@@ -78,8 +76,6 @@ int main(int argc, char * argv[])
     //TEMPORARY 
     //TODO: please add level_add_entity to every _new function for enemies and player
     level_add_entity(level, player_get());
-    //level_add_entity(level, ent);
-    //level_add_entity(level, ent2);
 
     List* collisions = gfc_list_new();
 
