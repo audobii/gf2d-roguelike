@@ -34,11 +34,12 @@ Level* level_load(const char* filename) {
     int a, b;
     int x = 0, y = 0;
     int t = 0;
+    int done;
     int tileFPL;
     const char* str;
     SJson* json, * lj, * list, * list2, * row, * row2, * item;
     Level* level;
-    List* coords;
+    List* coords, *temp_list;
     Entity* temp_ent;
 
     if (!filename)return NULL;
@@ -121,7 +122,10 @@ Level* level_load(const char* filename) {
     if (list && list2) {
         c = sj_array_get_count(list); //total entities in level
 
+        temp_list = gfc_list_new();
+
         for (int i = 0; i < c; i++) {
+            done = 0;
             coords = gfc_list_new();
             row = sj_array_get_nth(list, i); //the entity
             row2 = sj_array_get_nth(list2, i); //the coords
@@ -130,9 +134,23 @@ Level* level_load(const char* filename) {
             a = sj_array_get_nth(row2, 0); //enemy pos x 
             b = sj_array_get_nth(row2, 1); //enemy pos y
 
-            sj_get_integer_value(row, &t);
+            //sj_get_integer_value(row, &t); this is for hardcoded values in json file
             sj_get_integer_value(a, &x);
             sj_get_integer_value(b, &y);
+
+            //randomize and make unique shop items
+            t = (rand() % 7) + 1;
+
+            while (!done) {
+                if (gfc_list_get_item_index(temp_list, t) == -1)
+                {
+                    gfc_list_append(temp_list, t);
+                    done = 1;
+                }
+                else {
+                    t = (rand() % 7) + 1;
+                }
+            }
 
             temp_ent = shop_item_new(vector2d(x, y), t);
             gfc_list_append(level->existing_entities, temp_ent);

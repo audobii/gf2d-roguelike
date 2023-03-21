@@ -25,11 +25,11 @@ Entity* cave_hole_new(Vector2D position) {
 
     vector2d_copy(ent->position, position);
 
-    ent->drawOffset = vector2d(28, 32);
+    ent->drawOffset = vector2d(32, 32);
     ent->speed = 0;
 
     //body/collision stuff
-    ent->shape = gfc_shape_circle(0, 0, 22);
+    ent->shape = gfc_shape_rect(-30, -12, 60, 20);
     ent->body.shape = &ent->shape;
     ent->body.team = 0;
     vector2d_copy(ent->body.position, position);

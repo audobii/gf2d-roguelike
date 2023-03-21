@@ -175,7 +175,7 @@ void shop_item_think(Entity* self)
             player_set_ability(player_get(), 5);
         }
 
-        player_set_money(p_current_money - 20);
+        player_set_money(p_current_money - price);
         //entity_clear_from_level(self);
         entity_free(self);
     }
