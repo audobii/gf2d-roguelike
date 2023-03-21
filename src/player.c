@@ -111,7 +111,7 @@ Entity* player_new(Vector2D position) {
 	ent->free_entity = player_free;
     ent->takeDamage = entity_damage;
 
-    ent->health = 150;
+    ent->health = 350;
 
 	vector2d_copy(ent->position, position);
 	ent->speed = 2.5;
@@ -494,8 +494,8 @@ void player_game_over(Entity* self) {
     old_high_score = sj_object_get_value(obj, "high_score");
     old_highest_rooms = sj_object_get_value(obj, "highest_rooms");
 
-    sj_get_integer_value(old_high_score, old_score);
-    sj_get_integer_value(old_highest_rooms, old_rooms);
+    sj_get_integer_value(old_high_score, &old_score);
+    sj_get_integer_value(old_highest_rooms, &old_rooms);
 
     new_scores = sj_object_new();
     new_json = sj_object_new();
@@ -511,6 +511,10 @@ void player_game_over(Entity* self) {
     char str[40];
     sprintf(str, "room score: %i // score: %i", pdata->room_score, pdata->score);
     slog(str);
+
+    char str2[40];
+    sprintf(str2, "old room score: %i // old score: %i", old_rooms, old_score);
+    slog(str2);
 
     if (pdata->room_score > old_rooms && pdata->score > old_score) {
         sj_object_insert(new_scores, "player_name", sj_new_str(ThePlayer->name));
