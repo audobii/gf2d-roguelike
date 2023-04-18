@@ -28,8 +28,11 @@
 
 #include "cave_hole.h"
 
+void parse_arguments(int argc, char* argv[]);
+
 int main(int argc, char * argv[])
 {
+    parse_arguments(argc, argv);
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
@@ -130,5 +133,15 @@ int main(int argc, char * argv[])
     level_free(level_get_active_level());
     slog("---==== END ====---");
     return 0;
+}
+
+void parse_arguments(int argc, char* argv[]) {
+    int i;
+
+    for (i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "--editor")) {
+            slog("editor open");
+        }
+    }
 }
 /*eol@eof*/
