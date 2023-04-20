@@ -30,11 +30,15 @@
 
 #include "cave_hole.h"
 
+static Bool debug;
+
 void parse_arguments(int argc, char* argv[]);
 
 int main(int argc, char * argv[])
 {
+    debug = false;
     parse_arguments(argc, argv);
+
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
@@ -107,7 +111,7 @@ int main(int argc, char * argv[])
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
             level_draw(level_get_active_level());
 
-            entity_draw_all();
+            entity_draw_all(debug);
             
             //level_draw_static_shapes(level_get_active_level());
 
@@ -143,6 +147,10 @@ void parse_arguments(int argc, char* argv[]) {
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--editor")) {
             slog("editor open");
+        }
+        if (!strcmp(argv[i], "--debug")) {
+            slog("debug mode");
+            debug = true;
         }
     }
 }

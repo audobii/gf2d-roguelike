@@ -72,7 +72,7 @@ void entity_free(Entity* ent)
     memset(ent, 0, sizeof(Entity));
 }
 
-void entity_draw(Entity* ent)
+void entity_draw(Entity* ent, Bool debug)
 {
     if (!ent)return;
 
@@ -93,21 +93,23 @@ void entity_draw(Entity* ent)
 
         //uncomment to see hitboxes/shapes
         // TODO: in the future make a "debug" mode to draw these
-        //gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
-        //gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
+        if (debug) {
+            gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
+            gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
+        }
     }
     //gf2d_draw_pixel(ent->position, GFC_COLOR_YELLOW);
     //gf2d_draw_circle(ent->position, 10, GFC_COLOR_YELLOW);
-    //body_draw(&ent->body, vector2d(0, 0));
+    if(debug)body_draw(&ent->body, vector2d(0, 0));
 }
 
-void entity_draw_all()
+void entity_draw_all(Bool debug)
 {
     int i;
     for (i = 0; i < entity_manager.entity_max; i++)
     {
         if (!entity_manager.entity_list[i]._inuse)continue;
-        entity_draw(&entity_manager.entity_list[i]);
+        entity_draw(&entity_manager.entity_list[i], debug);
     }
 }
 
