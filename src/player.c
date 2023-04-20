@@ -114,7 +114,7 @@ Entity* player_new(Vector2D position) {
     ent->health = 350;
 
 	vector2d_copy(ent->position, position);
-	ent->speed = 2.5;
+	ent->speed = 3.5;
 
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {

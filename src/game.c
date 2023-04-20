@@ -18,6 +18,8 @@
 #include "enemy_glowfly.h"
 #include "enemy_rock_block.h"
 
+#include "interactable_trap.h"
+
 #include "pickup.h"
 #include "shop_item.h"
 
