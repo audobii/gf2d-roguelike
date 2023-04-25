@@ -19,6 +19,7 @@
 #include "enemy_rock_block.h"
 
 #include "interactable_trap.h"
+#include "interactable_button.h"
 
 #include "pickup.h"
 #include "shop_item.h"
