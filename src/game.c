@@ -32,12 +32,14 @@
 #include "cave_hole.h"
 
 static Bool debug;
+static Bool editor;
 
 void parse_arguments(int argc, char* argv[]);
 
 int main(int argc, char * argv[])
 {
     debug = false;
+    editor = false;
     parse_arguments(argc, argv);
 
     /*variable declarations*/
@@ -148,6 +150,7 @@ void parse_arguments(int argc, char* argv[]) {
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--editor")) {
             slog("editor open");
+            editor = true;
         }
         if (!strcmp(argv[i], "--debug")) {
             slog("debug mode");

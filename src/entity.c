@@ -105,12 +105,25 @@ void entity_draw(Entity* ent, Bool debug)
 
 void entity_draw_all(Bool debug)
 {
+    //TODO: maybe implement layering system here
+    //make lists and sort what to draw; then call draw for each set
+    Entity* player = NULL;
+
     int i;
     for (i = 0; i < entity_manager.entity_max; i++)
     {
         if (!entity_manager.entity_list[i]._inuse)continue;
-        entity_draw(&entity_manager.entity_list[i], debug);
+
+        if (!gfc_line_cmp(&entity_manager.entity_list[i].name, "player")) { //skip drawing player
+            player = &entity_manager.entity_list[i];
+        }
+        else {
+            entity_draw(&entity_manager.entity_list[i], debug);
+        }
     }
+
+    //draw player last
+    entity_draw(player, debug);
 }
 
 void entity_update(Entity* ent)
