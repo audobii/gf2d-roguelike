@@ -20,6 +20,7 @@
 
 #include "interactable_trap.h"
 #include "interactable_button.h"
+#include "interactable_water_hazard.h"
 
 #include "pickup.h"
 #include "shop_item.h"
