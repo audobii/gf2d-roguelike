@@ -376,14 +376,6 @@ void player_draw_hud(Entity* self) {
         Sprite* bar = gf2d_sprite_load_image("images/bar.png");
         Sprite* ability_blank = gf2d_sprite_load_image("images/ability_blank.png");
         Sprite* curr_ability = NULL;
-        //??? how to write text
-        TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
-        //slog(TTF_GetError());
-        SDL_Color white = { 255,255,255 };
-
-        SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
-
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
 
         //health
         if (self->health > 0) {
@@ -420,6 +412,15 @@ void player_draw_hud(Entity* self) {
             
             if(curr_ability)gf2d_sprite_draw_image(curr_ability, vector2d(40, 600));
         }
+
+        //??? how to write text
+        TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
+        //slog(TTF_GetError());
+        SDL_Color white = { 255,255,255 };
+
+        SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
+
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
 
         SDL_Rect dstrect = { 0, 0, 0, 0 };
         SDL_RenderCopy(gf2d_graphics_get_renderer(), texture, NULL, &dstrect);

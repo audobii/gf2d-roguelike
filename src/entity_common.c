@@ -13,11 +13,16 @@
 #include "enemy_glowfly.h"
 #include "enemy_rock_block.h"
 
+#include "gfc_audio.h"
+
 void entity_damage(Entity* self, float damage, Entity* inflictor)
 {
     if (!self)return;
     if (self->health < 0)return;// lets not beat a dead horse
     //slog("hit");
+
+    //play hit audio - REPLACE FILENAME, also maybe channels
+    gfc_sound_play(gfc_sound_load("audio/pop.mp3", 1, 5), 0, 1, 1, 1);
 
     //printing damage variable... its 0.00000
     //char str[20];

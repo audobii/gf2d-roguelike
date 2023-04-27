@@ -7,6 +7,7 @@
 
 #include "gfc_shape.h"
 #include "gfc_input.h"
+#include "gfc_audio.h"
 
 #include "level.h"
 #include "entity.h"
@@ -67,6 +68,14 @@ int main(int argc, char * argv[])
         720,
         vector4d(0,0,0,255),
         0);
+    gfc_audio_init(
+        1024,
+        16,
+        5,
+        MIX_MAX_VOLUME,
+        1,
+        1
+    );
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
     entity_manager_init(1024);
@@ -91,6 +100,8 @@ int main(int argc, char * argv[])
     level_add_entity(level, player_get());
 
     List* collisions = gfc_list_new();
+    
+    gfc_sound_play(gfc_sound_load("audio/Cooking Books (looped, Final Mix).wav", 1, 5), -1, 1, -1, -1);
 
     /*main game loop*/
     while(!done)
