@@ -8,7 +8,9 @@
 
 #include "level.h"
 
-static const char* rooms[] = {"rooms/blockRoom.json", "rooms/enemyRoom1.json", "rooms/fliesncoins.json", "rooms/mazeRoom.json", "rooms/shop.json", "rooms/enemyRoom2.json", "rooms/trickRoom.json"};
+//change these to add more rooms
+static const char* rooms[] = {"rooms/blockRoom.json", "rooms/enemyRoom1.json", "rooms/fliesncoins.json", "rooms/mazeRoom.json", "rooms/shop.json", "rooms/enemyRoom2.json", "rooms/trickRoom.json", "rooms/itemRoom.json", "rooms/wellRoom.json", "rooms/buttonRoom.json", "rooms/crateRoom.json"};
+static const int roomsMax = 11;
 
 void cave_hole_think(Entity* self);
 void cave_hole_draw(Entity* self);
@@ -86,7 +88,7 @@ void cave_hole_think(Entity* self)
 
     level_free(old_level);
 
-    int rand_num = rand() % 7;
+    int rand_num = rand() % roomsMax;
 
     //temporary bad way to do this bc loading from rooms array not working
     /*

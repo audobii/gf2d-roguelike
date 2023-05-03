@@ -20,6 +20,7 @@
 #include "interactable_water_hazard.h"
 #include "interactable_well.h"
 #include "interactable_door.h"
+#include "interactable_crate.h"
 
 void level_build(Level* level);
 void level_spawn_enemies(Level* level);
@@ -258,6 +259,9 @@ Level* level_load(const char* filename) {
                     break;
                 case 4:
                     temp_ent = well_new(vector2d(x, y));
+                    break;
+                case 5:
+                    temp_ent = crate_new(vector2d(x, y));
                     break;
             }
 

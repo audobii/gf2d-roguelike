@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
 
-    level = level_load("rooms/buttonRoom.json");
+    level = level_load("rooms/crateRoom.json");
     level_set_active_level(level);
 
     //SPAWN PLAYER AT 600, 555
@@ -108,6 +108,8 @@ int main(int argc, char * argv[])
     List* collisions = gfc_list_new();
     
     gfc_sound_play(gfc_sound_load("audio/Cooking Books (looped, Final Mix).wav", 1, 5), -1, 1, -1, -1);
+
+    TTF_Init();
 
     /*main game loop*/
     while(!done)

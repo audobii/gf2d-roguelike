@@ -46,6 +46,8 @@ Entity* button_new(Vector2D position, Entity* trigger)
     gfc_line_cpy(ent->name, "button");
 
     button_trigger = trigger;
+    collided = false;
+    triggered = false;
 
     return ent;
 }
