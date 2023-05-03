@@ -56,6 +56,7 @@ void rock_block_draw(Entity* self) {
 
 //FOR SOME REASON blockRoom.json is NOT REALLY WORKING - idk if its cuz of here
 //two of the blocks in the middle and right dont hit player/no collision
+//is it because of multiple instances...?
 void rock_block_think(Entity* self)
 {
     Vector2D m, dir;

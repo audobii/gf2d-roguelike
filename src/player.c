@@ -367,7 +367,6 @@ void player_draw(Entity* self) {
 }
 
 void player_draw_hud(Entity* self) {
-    TTF_Init();
     if (!self) {
         Sprite* gameOverSprite = gf2d_sprite_load_image("images/game_over.png");
         gf2d_sprite_draw_image(gameOverSprite, vector2d(500, 250));
@@ -413,22 +412,27 @@ void player_draw_hud(Entity* self) {
             if(curr_ability)gf2d_sprite_draw_image(curr_ability, vector2d(40, 600));
         }
 
+        /*
+        TTF_Init();
         //??? how to write text
-        TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 25);
+        //OK THIS WORKS NOW
+        TTF_Font* font = TTF_OpenFont("fonts/Pixelpoint black.ttf", 25);
         //slog(TTF_GetError());
         SDL_Color white = { 255,255,255 };
 
-        SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
+        //SDL_Surface* surface = TTF_RenderText_Solid(font, "this is a TEST", white);
+        SDL_Surface* surface = TTF_RenderUTF8_Blended(font, "this is a TEST", white);
 
         SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
 
-        SDL_Rect dstrect = { 0, 0, 0, 0 };
+        SDL_Rect dstrect = { 0, 0, 200, 100 };
         SDL_RenderCopy(gf2d_graphics_get_renderer(), texture, NULL, &dstrect);
-        SDL_RenderPresent(gf2d_graphics_get_renderer());
+        //SDL_RenderPresent(gf2d_graphics_get_renderer());
 
         TTF_CloseFont(font);
         SDL_DestroyTexture(texture);
         SDL_FreeSurface(surface);
+        */
     }
 }
 

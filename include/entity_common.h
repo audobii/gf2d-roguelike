@@ -25,6 +25,10 @@ void entity_drop_loot(Entity* ent);
 
 void entity_draw_still_image(Entity* ent);
 
+/**
+ * @brief check for collision and cause contact damage against any entities collided with
+ * @param ent the entity doing contact damage
+ */
 void entity_do_contact_damage(Entity* ent);
 
 /**

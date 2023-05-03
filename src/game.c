@@ -85,6 +85,10 @@ int main(int argc, char * argv[])
 
     /*demo setup*/
     //game window is 1200x720
+
+
+    //dont do the following until start button is clicked?
+    //***
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
 
@@ -98,6 +102,8 @@ int main(int argc, char * argv[])
     //TEMPORARY 
     //TODO: please add level_add_entity to every _new function for enemies and player
     level_add_entity(level, player_get());
+    
+    //***
 
     List* collisions = gfc_list_new();
     
@@ -145,6 +151,8 @@ int main(int argc, char * argv[])
             player_draw_hud(player_get());
 
             gf2d_collision_update(collisions);
+
+            //check if in main menu - if so, draw main menu screen (+ disable player controls? or dont spawn player yet)
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
