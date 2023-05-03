@@ -56,6 +56,8 @@ int main(int argc, char * argv[])
     Color mouseColor = gfc_color8(255,255,255,180);
     
     Level* level;
+    SJson* gameManager_json;
+    const char* str;
 
     /*program initializtion*/
     init_logger("gf2d.log",0);
@@ -86,13 +88,18 @@ int main(int argc, char * argv[])
     /*demo setup*/
     //game window is 1200x720
 
+    gameManager_json = sj_load("config/game_manager.json");
+    if (!gameManager_json)slog("could not load game manager");
+
+    str = sj_object_get_value_as_string(gameManager_json, "starting_room_file_name");
 
     //dont do the following until start button is clicked?
     //***
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
 
-    level = level_load("rooms/crateRoom.json");
+    if (str) { level = level_load(str); }
+    else { level = level_load("rooms/startRoom.json"); }
     level_set_active_level(level);
 
     //SPAWN PLAYER AT 600, 555
@@ -110,6 +117,8 @@ int main(int argc, char * argv[])
     gfc_sound_play(gfc_sound_load("audio/Cooking Books (looped, Final Mix).wav", 1, 5), -1, 1, -1, -1);
 
     TTF_Init();
+
+    sj_free(gameManager_json);
 
     /*main game loop*/
     while(!done)

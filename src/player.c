@@ -21,6 +21,7 @@ void player_free(Entity* self);
 static Entity* ThePlayer = NULL;
 static float internal_timer = 0;
 static float ability_timer = 0;
+static float ability_timer_max = 16.0;
 
 typedef struct {
 	Uint32 mana;
@@ -32,6 +33,9 @@ typedef struct {
 
     //following are for passive items
     Bool manaRegen;
+    Bool fireProjectiles;
+    Bool doubleShot;
+    Bool shield;
 }PlayerData;
 
 Entity* player_get() {
@@ -105,6 +109,51 @@ void player_set_manaRegen(Bool b) {
     pdata->manaRegen = b;
 }
 
+void player_set_fire_projectiles(Bool b) {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    pdata->fireProjectiles = b;
+}
+
+Bool player_fire_projectiles_is_active() {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    return pdata->fireProjectiles;
+}
+
+void player_set_double_shot(Bool b) {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    pdata->doubleShot = b;
+}
+
+void player_set_shield(Bool b) {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    pdata->shield = b;
+}
+
+Bool player_shield_is_active() {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    return pdata->shield;
+}
+
+
+void player_set_ability_timer(Entity* self, float newTime) {
+    ability_timer_max = newTime;
+}
+
 Entity* player_new(Vector2D position) {
 	PlayerData* data;
 	Entity* ent;
@@ -130,12 +179,15 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 1;
+        data->currentAbility = 5;
         data->abilityActive = false;
         data->money = 20;
         data->room_score = 0;
         data->score = 0;
         data->manaRegen = false;
+        data->fireProjectiles = false;
+        data->doubleShot = false;
+        data->shield = false;
 		ent->data = data;
 	}
 
@@ -150,7 +202,7 @@ Entity* player_new(Vector2D position) {
 
 void player_attack(Entity* self) {
     //slog("atk");
-    Vector2D m, dir, dir1, dir2;
+    Vector2D m, dir, dir1, dir2, offset;
     int mx, my;
 
     PlayerData* data;
@@ -161,6 +213,8 @@ void player_attack(Entity* self) {
     m.x = mx;
     m.y = my;
     vector2d_sub(dir, m, self->position);
+
+    offset = vector2d(self->body.position.x - 10, self->body.position.y - 10);
 
     //dir = vector2d_from_angle(self->rotation);
     
@@ -174,6 +228,12 @@ void player_attack(Entity* self) {
             dir2.y = dir.y;
             projectile_new(self, self->body.position, dir1, 5, 10.0, 5, 100);
             projectile_new(self, self->body.position, dir2, 5, 10.0, 5, 100);
+
+            if (data->doubleShot) {
+                projectile_new(self, offset, dir, 5, 10.0, 5, 100);
+                projectile_new(self, offset, dir1, 5, 10.0, 5, 100);
+                projectile_new(self, offset, dir2, 5, 10.0, 5, 100);
+            }
         }
 
         else if (data->currentAbility == 3) { //ABILITY 3: self destruct
@@ -203,11 +263,13 @@ void player_attack(Entity* self) {
 
         else if (data->currentAbility == 5) { //ABILITY 5: poison darts
             projectile_new(self, self->body.position, dir, 5, 10.0, 2, 100);
+            if (data->doubleShot)projectile_new(self, offset, dir, 5, 10.0, 5, 100);
         }
 
     }
     else { //normal atk
         projectile_new(self, self->body.position, dir, 5, 10.0, 5, 100);
+        if(data->doubleShot)projectile_new(self, offset, dir, 5, 10.0, 5, 100);
     }
 }
 
@@ -348,7 +410,7 @@ void player_think(Entity* self) {
         internal_timer = 0;
     }
 
-    if (ability_timer > 16.0) { //cooldown sorta
+    if (ability_timer > ability_timer_max) { //cooldown sorta
         player_deactivate_ability();
         ability_timer = 0;
     }

@@ -212,8 +212,17 @@ Level* level_load(const char* filename) {
             //sj_get_integer_value(row, &t); this is for hardcoded values in json file
             sj_get_integer_value(a, &x);
             sj_get_integer_value(b, &y);
+            sj_get_integer_value(row, &t);
 
-            temp_ent = passive_item_new(vector2d(x,y),1);
+            temp_ent = NULL;
+
+            if (t == -1) {
+                temp_ent = passive_item_new_rand(vector2d(x, y));
+            }
+            else {
+                temp_ent = passive_item_new(vector2d(x, y), t);
+            }
+
             gfc_list_append(level->existing_entities, temp_ent);
         }
     }

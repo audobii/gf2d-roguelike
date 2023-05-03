@@ -38,8 +38,22 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
         self->health -= 1;
         self->isPoisoned = true;
     }
+    else if (player_fire_projectiles_is_active() && self->body.team != 1) {
+        self->health -= 1;
+        self->isBurned = true;
+    }
+    else if (!gfc_line_cmp(self->name, "player") && player_shield_is_active()) {
+        int rand_num = rand() % 3;
+
+        if (rand_num < 2)self->health -= 10;
+    }
     else {
         self->health -= 10; //hardcoded, supposed to be damage 
+    }
+
+    //if entity is both poisoned and burned, explode and DIE
+    if (self->isPoisoned && self->isBurned) {
+        self->health = 0;
     }
 
     //TODO: maybe make a die function for each entity and call it here; call a generic one if they dont have one

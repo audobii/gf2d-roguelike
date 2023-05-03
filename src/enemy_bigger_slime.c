@@ -78,6 +78,10 @@ void bigger_slime_think(Entity* self)
         self->health -= 0.1;
     }
 
+    if (self->isBurned) {
+        self->health -= 0.1;
+    }
+
     if (self->health <= 0) 
     {
         Vector2D offset_pos;

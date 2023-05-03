@@ -63,8 +63,14 @@ void sentient_drill_think(Entity* self)
         vector2d_clear(self->body.velocity);
     }
 
+    /*
     if (self->isPoisoned) {
         self->health -= 0.1;
+    }
+    */
+
+    if (self->isBurned) {
+        self->health -= 0.2;
     }
 
     internal_timer += 0.1;

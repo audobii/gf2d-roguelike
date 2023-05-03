@@ -78,6 +78,19 @@ int player_get_ability();
 void player_set_manaRegen(Bool b);
 
 void player_set_ability(Entity* self, int ability);
+
+void player_set_ability_timer(Entity* self, float newTime);
+
+void player_set_fire_projectiles(Bool b);
+
+Bool player_fire_projectiles_is_active();
+
+void player_set_double_shot(Bool b);
+
+void player_set_shield(Bool b);
+
+Bool player_shield_is_active();
+
 /**
  * @return true if player ability is active; false if otherwise
  */

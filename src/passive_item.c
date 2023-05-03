@@ -26,6 +26,22 @@ Entity* passive_item_new_rand(Vector2D position)
         ent->sprite = gf2d_sprite_load_image("images/mana_regen_item_small.png");
         gfc_line_cpy(ent->name, "pass_mana_regen");
         break;
+    case 2: 
+        ent->sprite = gf2d_sprite_load_image("images/stopwatch_item_small.png");
+        gfc_line_cpy(ent->name, "pass_stopwatch");
+        break;
+    case 3:
+        ent->sprite = gf2d_sprite_load_image("images/fire_passive_item.png");
+        gfc_line_cpy(ent->name, "pass_fire");
+        break;
+    case 4:
+        ent->sprite = gf2d_sprite_load_image("images/double_shot_item.png");
+        gfc_line_cpy(ent->name, "pass_double");
+        break;
+    case 5:
+        ent->sprite = gf2d_sprite_load_image("images/magic_shield_item.png");
+        gfc_line_cpy(ent->name, "pass_shield");
+        break;
     default:
         return;
         break;
@@ -59,6 +75,22 @@ Entity* passive_item_new(Vector2D position, int type)
     case 1:
         ent->sprite = gf2d_sprite_load_image("images/mana_regen_item_small.png");
         gfc_line_cpy(ent->name, "pass_mana_regen");
+        break;
+    case 2:
+        ent->sprite = gf2d_sprite_load_image("images/stopwatch_item_small.png");
+        gfc_line_cpy(ent->name, "pass_stopwatch");
+        break;
+    case 3:
+        ent->sprite = gf2d_sprite_load_image("images/fire_passive_item.png");
+        gfc_line_cpy(ent->name, "pass_fire");
+        break;
+    case 4:
+        ent->sprite = gf2d_sprite_load_image("images/double_shot_item.png");
+        gfc_line_cpy(ent->name, "pass_double");
+        break;
+    case 5:
+        ent->sprite = gf2d_sprite_load_image("images/magic_shield_item.png");
+        gfc_line_cpy(ent->name, "pass_shield");
         break;
     default:
         return;
@@ -119,6 +151,19 @@ void passive_item_think(Entity* self)
         //set mana regen in player to true
         player_set_manaRegen(true);
     }
+    else if (!gfc_line_cmp(self->name, "pass_stopwatch")) {
+        player_set_ability_timer(player_get(),48.0);
+    }
+    else if (!gfc_line_cmp(self->name, "pass_fire")) {
+        player_set_fire_projectiles(true);
+    }
+    else if (!gfc_line_cmp(self->name, "pass_double")) {
+        player_set_double_shot(true);
+    }
+    else if (!gfc_line_cmp(self->name, "pass_shield")) {
+        player_set_shield(true);
+    }
+
     entity_free(self);
 }
 

@@ -76,6 +76,9 @@ void glowfly_think(Entity* self)
     if (self->isPoisoned) {
         self->health -= 0.1;
     }
+    if (self->isBurned) {
+        self->health -= 0.1;
+    }
 
     if (self->health <= 0)
     {
