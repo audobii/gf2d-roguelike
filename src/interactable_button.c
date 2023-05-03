@@ -83,6 +83,8 @@ void button_think(Entity* self) {
 
         //trigger one-time something here
 
+        entity_free(button_trigger);
+
         collided = false;
         triggered = true;
     }

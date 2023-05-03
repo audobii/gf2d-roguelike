@@ -15,6 +15,12 @@
 #include "pickup.h"
 #include "passive_item.h"
 
+#include "interactable_button.h"
+#include "interactable_trap.h"
+#include "interactable_water_hazard.h"
+#include "interactable_well.h"
+#include "interactable_door.h"
+
 void level_build(Level* level);
 void level_spawn_enemies(Level* level);
 
@@ -109,9 +115,11 @@ Level* level_load(const char* filename) {
             sj_get_integer_value(a, &x);
             sj_get_integer_value(b, &y);
 
+            /*
             char str[20];
             sprintf(str, "%i", x);
             slog(str);
+            */
 
             gfc_list_append(level->enemiesToSpawn, entity_spawn_by_name(enemy_name, vector2d(x,y)));
         }
@@ -206,6 +214,55 @@ Level* level_load(const char* filename) {
 
             temp_ent = passive_item_new(vector2d(x,y),1);
             gfc_list_append(level->existing_entities, temp_ent);
+        }
+    }
+
+    //spawn in interactable items
+    list = sj_object_get_value(lj, "interactable_list");
+    list2 = sj_object_get_value(lj, "interactable_coords");
+    if (list && list2) {
+        c = sj_array_get_count(list); //total entities in level
+
+        temp_list = gfc_list_new();
+
+        for (int i = 0; i < c; i++) {
+            done = 0;
+            coords = gfc_list_new();
+            row = sj_array_get_nth(list, i); //the entity
+            row2 = sj_array_get_nth(list2, i); //the coords
+
+            //slog(enemy_name);
+            a = sj_array_get_nth(row2, 0); //ent pos x 
+            b = sj_array_get_nth(row2, 1); //ent pos y
+
+            //sj_get_integer_value(row, &t); this is for hardcoded values in json file
+            sj_get_integer_value(a, &x);
+            sj_get_integer_value(b, &y);
+            sj_get_integer_value(row, &t);
+
+            temp_ent = NULL;
+            Entity* door = NULL;
+
+            //if t=?, spawn item???
+            switch (t) {
+                //button and door
+                case 1:
+                    door = door_new(vector2d(x, y));
+                    temp_ent = button_new(vector2d(x + 200, y + 100), door);
+                    break;
+                case 2: 
+                    temp_ent = trap_new(vector2d(x, y));
+                    break;
+                case 3:
+                    temp_ent = water_hazard_new(vector2d(x, y));
+                    break;
+                case 4:
+                    temp_ent = well_new(vector2d(x, y));
+                    break;
+            }
+
+            if(temp_ent)gfc_list_append(level->existing_entities, temp_ent);
+            if (door)gfc_list_append(level->existing_entities, door);
         }
     }
 
