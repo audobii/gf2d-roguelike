@@ -13,6 +13,7 @@
 #include "entity_common.h"
 #include "shop_item.h"
 #include "pickup.h"
+#include "passive_item.h"
 
 void level_build(Level* level);
 void level_spawn_enemies(Level* level);
@@ -177,6 +178,33 @@ Level* level_load(const char* filename) {
             sj_get_integer_value(b, &y);
 
             temp_ent = pickup_new(vector2d(x, y), t);
+            gfc_list_append(level->existing_entities, temp_ent);
+        }
+    }
+
+    //spawn in passive items similar to shop
+    list = sj_object_get_value(lj, "item_list");
+    list2 = sj_object_get_value(lj, "item_coords");
+    if (list && list2) {
+        c = sj_array_get_count(list); //total entities in level
+
+        temp_list = gfc_list_new();
+
+        for (int i = 0; i < c; i++) {
+            done = 0;
+            coords = gfc_list_new();
+            row = sj_array_get_nth(list, i); //the entity
+            row2 = sj_array_get_nth(list2, i); //the coords
+
+            //slog(enemy_name);
+            a = sj_array_get_nth(row2, 0); //ent pos x 
+            b = sj_array_get_nth(row2, 1); //ent pos y
+
+            //sj_get_integer_value(row, &t); this is for hardcoded values in json file
+            sj_get_integer_value(a, &x);
+            sj_get_integer_value(b, &y);
+
+            temp_ent = passive_item_new(vector2d(x,y),1);
             gfc_list_append(level->existing_entities, temp_ent);
         }
     }

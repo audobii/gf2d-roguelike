@@ -75,6 +75,8 @@ void player_deactivate_ability();
 
 int player_get_ability();
 
+void player_set_manaRegen(Bool b);
+
 void player_set_ability(Entity* self, int ability);
 /**
  * @return true if player ability is active; false if otherwise

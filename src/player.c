@@ -29,6 +29,9 @@ typedef struct {
     int money;
     int room_score; //how many rooms player went through
     int score; //for enemy killings
+
+    //following are for passive items
+    Bool manaRegen;
 }PlayerData;
 
 Entity* player_get() {
@@ -94,6 +97,14 @@ void player_score_inc(int points) {
     pdata->score += points;
 }
 
+void player_set_manaRegen(Bool b) {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    pdata->manaRegen = b;
+}
+
 Entity* player_new(Vector2D position) {
 	PlayerData* data;
 	Entity* ent;
@@ -124,6 +135,7 @@ Entity* player_new(Vector2D position) {
         data->money = 20;
         data->room_score = 0;
         data->score = 0;
+        data->manaRegen = false;
 		ent->data = data;
 	}
 
@@ -329,6 +341,10 @@ void player_think(Entity* self) {
             player_attack(self);
         }
 
+        if (data->manaRegen && data->mana < 348) {
+            data->mana += 2;
+        }
+
         internal_timer = 0;
     }
 
@@ -459,7 +475,7 @@ void player_activate_ability() {
 
     if (pdata->abilityActive)return;
 
-    player_set_mana(player_get_mana() - 25);
+    player_set_mana(player_get_mana() - 50);
     pdata->abilityActive = true;
 }
 

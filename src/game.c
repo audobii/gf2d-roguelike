@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
     sprite = gf2d_sprite_load_image("images/backgrounds/floor1.png");
     mouse = gf2d_sprite_load_image("images/cursor.png");
 
-    level = level_load("rooms/startRoom.json");
+    level = level_load("rooms/itemRoom.json");
     level_set_active_level(level);
 
     //SPAWN PLAYER AT 600, 555
