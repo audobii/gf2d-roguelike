@@ -14,6 +14,8 @@
 #include "enemy_rock_block.h"
 #include "boss_royal_slime.h"
 
+#include "boss_royal_slime_smaller.h"
+
 #include "gfc_audio.h"
 
 void entity_damage(Entity* self, float damage, Entity* inflictor)
@@ -32,7 +34,8 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
 
     //TODO: fix this.
     //damage being passed to this function is not working for some reason... TEMPORARY HARD CODING VALUE
-    if (player_ability_is_active() && player_get_ability() == 4 && self->body.team != 1) { //for ability 4 - just insta kill them
+    if (player_ability_is_active() && player_get_ability() == 4 && self->body.team != 1) { //for ability 4 - just insta kill them, unless its the boss
+        if (!gfc_line_cmp(self->name, "boss_slime"))return;
         self->health = 0;
     }
     else if (player_ability_is_active() && player_get_ability() == 5 && self->body.team != 1) { //for ability 5 - poison and do a little damage
@@ -52,8 +55,8 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
         self->health -= 10; //hardcoded, supposed to be damage 
     }
 
-    //if entity is both poisoned and burned, explode and DIE
-    if (self->isPoisoned && self->isBurned) {
+    //if entity is both poisoned and burned, explode and DIE... except if its the boss
+    if (self->isPoisoned && self->isBurned && gfc_line_cmp(self->name, "boss_slime")) {
         self->health = 0;
     }
 
@@ -66,6 +69,14 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
             offset_pos = vector2d(self->position.x + 40, self->position.y + 40);
             level_add_entity(level_get_active_level(), slime_new(self->position));
             level_add_entity(level_get_active_level(), slime_new(offset_pos));
+        } else if (!gfc_line_cmp(self->name, "boss_slime_smaller")) { 
+            level_add_entity(level_get_active_level(), bigger_slime_new(self->position));
+        }
+        else if (!gfc_line_cmp(self->name, "boss_slime")) {
+            Vector2D offset_pos;
+            offset_pos = vector2d(self->position.x + 100, self->position.y + 40);
+            level_add_entity(level_get_active_level(), boss_slime_smaller_new(self->position));
+            level_add_entity(level_get_active_level(), boss_slime_smaller_new(offset_pos));
         }
         else if (!gfc_line_cmp(self->name, "player")) { //if player dies handle it differently?
             slog("in entity_common.c");

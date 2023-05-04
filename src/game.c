@@ -59,6 +59,9 @@ int main(int argc, char * argv[])
     SJson* gameManager_json;
     const char* str;
 
+    int ability = -1;
+    int validateAbility;
+
     /*program initializtion*/
     init_logger("gf2d.log",0);
     slog("---==== BEGIN ====---");
@@ -117,6 +120,8 @@ int main(int argc, char * argv[])
     gfc_sound_play(gfc_sound_load("audio/Cooking Books (looped, Final Mix).wav", 1, 5), -1, 1, -1, -1);
 
     TTF_Init();
+
+    if(sj_object_get_value_as_int(gameManager_json, "starting_player_ability", &ability) == 1)player_set_ability(player_get(),ability);
 
     sj_free(gameManager_json);
 

@@ -1,3 +1,4 @@
 {
-	"starting_room_file_name": "rooms/bossRoom.json"
+	"starting_room_file_name": "rooms/startRoom.json",
+	"starting_player_ability": 4
 }

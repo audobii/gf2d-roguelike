@@ -11,6 +11,7 @@
 //change these to add more rooms
 static const char* rooms[] = {"rooms/blockRoom.json", "rooms/enemyRoom1.json", "rooms/fliesncoins.json", "rooms/mazeRoom.json", "rooms/shop.json", "rooms/enemyRoom2.json", "rooms/trickRoom.json", "rooms/itemRoom.json", "rooms/wellRoom.json", "rooms/buttonRoom.json", "rooms/crateRoom.json"};
 static const int roomsMax = 11;
+static const int roomsToBoss = 20;
 
 void cave_hole_think(Entity* self);
 void cave_hole_draw(Entity* self);
@@ -116,7 +117,15 @@ void cave_hole_think(Entity* self)
     */
     
     //slog("here");
-    level = level_load(rooms[rand_num]);
+
+    level = level_load("rooms/startRoom.json");
+
+    if (player_get_room_score() >= roomsToBoss) {
+        level = level_load("rooms/bossRoom.json");
+    }
+    else {
+        level = level_load(rooms[rand_num]);
+    }
     level_set_active_level(level);
    
     level_add_entity(level, player_get());
@@ -126,7 +135,7 @@ void cave_hole_think(Entity* self)
     //level_free(old_level); //this breaks it... but i want to free the old level? or do i have to
     //entity_clear_from_level(self);
     entity_free(self);
-    cave_hole_new(vector2d(600, 200));
+    if(player_get_room_score() <= roomsToBoss)cave_hole_new(vector2d(600, 200));
 }
 
 /*eol@eof*/

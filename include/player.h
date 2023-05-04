@@ -58,6 +58,8 @@ void player_set_money(int newMoney);
  */
 void player_room_inc();
 
+int player_get_room_score();
+
 /**
  * @brief increase player's score
  * @param points how much to increase score by

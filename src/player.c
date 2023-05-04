@@ -93,6 +93,14 @@ void player_room_inc() {
     pdata->room_score += 1;
 }
 
+int player_get_room_score() {
+    PlayerData* pdata;
+    if (ThePlayer == NULL)return;
+    pdata = ThePlayer->data;
+
+    return pdata->room_score;
+}
+
 void player_score_inc(int points) {
     PlayerData* pdata;
     if (ThePlayer == NULL)return;
@@ -179,7 +187,7 @@ Entity* player_new(Vector2D position) {
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	if (data) {
 		data->mana = 350;
-        data->currentAbility = 5;
+        data->currentAbility = -1;
         data->abilityActive = false;
         data->money = 20;
         data->room_score = 0;

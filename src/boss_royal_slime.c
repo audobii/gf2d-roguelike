@@ -10,6 +10,8 @@
 #include "enemy_glowfly.h"
 #include "enemy_sentient_drill.h"
 
+#include "boss_royal_slime_smaller.h"
+
 static float internal_timer = 0;
 static float spawn_timer = 0;
 static float proj_timer = 0;
@@ -46,7 +48,6 @@ Entity* boss_slime_new(Vector2D position)
 
 void boss_slime_draw(Entity* self) {
     if (!self)return;
-    //this is temp, its just cuz player sprite is a still image
     gf2d_sprite_draw(
         self->sprite,
         self->position,
@@ -109,7 +110,7 @@ void boss_slime_think(Entity* self)
         proj_timer = 0;
     }
 
-    if (spawn_timer > 40.0) {
+    if (spawn_timer > 48.0) {
         int rand_num = rand() % 2;
 
         if (rand_num < 1) {
@@ -133,9 +134,9 @@ void boss_slime_think(Entity* self)
     if (self->health <= 0)
     {
         Vector2D offset_pos;
-        offset_pos = vector2d(self->position.x + 40, self->position.y + 40);
-        level_add_entity(level_get_active_level(), slime_new(self->position));
-        level_add_entity(level_get_active_level(), slime_new(offset_pos));
+        offset_pos = vector2d(self->position.x + 100, self->position.y + 40);
+        level_add_entity(level_get_active_level(), boss_slime_smaller_new(self->position));
+        level_add_entity(level_get_active_level(), boss_slime_smaller_new(offset_pos));
 
         entity_clear_from_level(self);
         entity_free(self);
