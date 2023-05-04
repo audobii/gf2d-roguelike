@@ -12,6 +12,7 @@
 #include "enemy_crystal_guy.h"
 #include "enemy_glowfly.h"
 #include "enemy_rock_block.h"
+#include "boss_royal_slime.h"
 
 #include "gfc_audio.h"
 
@@ -147,6 +148,9 @@ Entity* entity_spawn_by_name(TextLine ent_name, Vector2D pos) {
     }
     else if (!gfc_line_cmp(ent_name, "sentient_drill")) {
         new_ent = sentient_drill_new(pos);
+    }
+    else if (!gfc_line_cmp(ent_name, "royal_slime")) {
+        new_ent = boss_slime_new(pos);
     }
 
     //if (!new_ent)return;
