@@ -24,9 +24,6 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
     if (self->health < 0)return;// lets not beat a dead horse
     //slog("hit");
 
-    //play hit audio - REPLACE FILENAME, also maybe channels
-    gfc_sound_play(gfc_sound_load("audio/pop.mp3", 1, 5), 0, 1, 1, 1);
-
     //printing damage variable... its 0.00000
     //char str[20];
     //sprintf(str, "%f", damage);
@@ -63,6 +60,7 @@ void entity_damage(Entity* self, float damage, Entity* inflictor)
     //TODO: maybe make a die function for each entity and call it here; call a generic one if they dont have one
     if (self->health <= 0)
     {
+        gfc_sound_play(gfc_sound_load("audio/pop.mp3", 1, 5), 0, 1, 1, 1);
         slog("died...");
         if (!gfc_line_cmp(self->name, "big_slime")) { //if big slime, split into two smaller ones
             Vector2D offset_pos;

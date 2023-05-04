@@ -13,6 +13,7 @@
 
 #include "gf2d_collision.h"
 #include "entity_common.h"
+#include "gfc_audio.h"
 
 void player_think(Entity* self);
 void player_draw(Entity* self);
@@ -228,6 +229,7 @@ void player_attack(Entity* self) {
     
     if (data->abilityActive) {
         if (data->currentAbility == 1) { //ABILITY 1: triple shot
+            gfc_sound_play(gfc_sound_load("audio/laser_pew_.wav", 0.7, 4), 0, 0.7, 4, 1);
             slog("TRIPLE");
             projectile_new(self, self->body.position, dir, 5, 10.0, 5, 100);
             dir1.x = dir.x + 150;
@@ -270,12 +272,14 @@ void player_attack(Entity* self) {
         }
 
         else if (data->currentAbility == 5) { //ABILITY 5: poison darts
+            gfc_sound_play(gfc_sound_load("audio/laser_pew_.wav", 0.7, 4), 0, 0.7, 4, 1);
             projectile_new(self, self->body.position, dir, 5, 10.0, 2, 100);
             if (data->doubleShot)projectile_new(self, offset, dir, 5, 10.0, 5, 100);
         }
 
     }
     else { //normal atk
+        gfc_sound_play(gfc_sound_load("audio/laser_pew_.wav", 0.7, 4), 0, 0.7, 4, 1);
         projectile_new(self, self->body.position, dir, 5, 10.0, 5, 100);
         if(data->doubleShot)projectile_new(self, offset, dir, 5, 10.0, 5, 100);
     }
